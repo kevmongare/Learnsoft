@@ -77,7 +77,7 @@ function App() {
     <p className="font-medium text-gray-700 leading-relaxed max-w-5xl ">
     Enterprise Resource Planning (ERP) software is a powerful all-in-one system designed to help businesses manage their day-to-day operations — including sales, inventory, accounting, payroll, human resources, and customer relationships — all from a single, connected platform.
     <br /><br />
-    Learnsoft Beliotech Solutions brings your key business functions together, our ERP systems gives you real-time visibility, improves team collaboration, reduces manual work, and helps you make smarter, faster decisions. This is the backbone of modern, efficient, and scalable business operations.
+    Learnsoft Beliotech Solutions ERP's brings your key business functions together, our ERP systems gives you real-time visibility, improves team collaboration, reduces manual work, and helps you make smarter, faster decisions. This is the backbone of modern, efficient, and scalable business operations.
     </p>
     </div>
       </section>
