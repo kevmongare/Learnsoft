@@ -38,12 +38,12 @@ function App() {
       </header>
 
       {/* ✅ Hero Section with External CSS background */}
-      <section className="relative w-full h-[70vh] hero-bg px-5 items-center justify-center">
+      <section className="relative w-full h-full md:h-[70vh] hero-bg px-5 items-center justify-center">
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/60"></div>
 
         {/* Hero Content */}
-        <div className="relative z-10 h-full md:px-20 flex  text-white justify-between py-16 lg:px-20 px-4">
+        <div className="relative z-10 h-full md:px-20 grid md:flex  text-white justify-between py-16 lg:px-20 px-4">
           <div className='pt-5'>
             <h1 className="text-5xl md:text-7xl font-semibold mb-4">
               Game-Changing<br />
@@ -63,7 +63,7 @@ function App() {
           </div>
 
           <div>
-            <img src={Learnsoft} alt=""  className='h-[60vh] rounded-2xl'/>
+            <img src={Learnsoft} alt=""  className='hidden md:block h-100 rounded-2xl'/>
           </div>
         </div>
       </section>
@@ -76,13 +76,13 @@ function App() {
               <h1 className="text-4xl font-bold text-black mb-6">
                 What is Enterprise Resource Planning (E.R.P) Software?
               </h1>
-              <div className='justify-between flex'>
+              <div className='justify-between md:flex grid'>
                 <p className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
                   Enterprise Resource Planning (ERP) software is a powerful all-in-one system that helps businesses manage their daily operations — including sales, inventory, accounting, payroll, human resources, and customer relationships — all from a single, connected platform.
                   <br /><br />
                   At <span className="text-blue-950 font-semibold">Learnsoft Beliotech Solutions</span>, our ERP systems bring all your key business functions together in one place. With real-time visibility, streamlined workflows, and enhanced collaboration across departments, our ERP helps your team reduce manual work, make smarter decisions, and operate more efficiently. It’s the foundation for modern, scalable business growth.
                 </p>
-                <img src={SchoolErp} alt="" className='h-[50vh] pl-5'/>
+                <img src={SchoolErp} alt="" className='mx-auto h-60 md:h-80 pl-5'/>
                 
               </div>
             </div>
