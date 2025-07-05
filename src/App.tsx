@@ -1,33 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Learnsoft from './assets/learnsoft.png'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {/* ✅ Sticky Menu Bar */}
+      <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-md">
+        <div className="px-5 md:px-20 py-4 flex justify-between items-center">
+          <h1 className="font-extrabold text-3xl cursor-pointer text-blue-950">
+            Learn<span className="text-orange-500">Soft</span>
+            <span className="text-xs font-light">solutions</span>
+          </h1>
+
+          <nav className="hidden md:flex space-x-6">
+            <a href="#" className="text-gray-900 hover:text-orange-600">Home</a>
+            <a href="#Overview" className="text-gray-900 hover:text-orange-600">Overview</a>
+            <a href="#About-t" className="text-gray-900 hover:text-orange-600">About Us</a>
+            <a href="#" className="text-gray-900 hover:text-orange-600">Products</a>
+            <a href="#services" className="text-gray-900 hover:text-orange-600">Services</a>
+            <a href="#contact" className="text-gray-900 hover:text-orange-600">Contact Us</a>
+            <a
+              href="#"
+              className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-sm font-medium"
+            >
+              Access Demo
+            </a>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button className="border border-orange-600 rounded-full py-1 px-4 hover:bg-orange-600 hover:text-white">
+              Menu
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ✅ Hero Section with External CSS background */}
+      <section className="relative w-full h-[70vh] hero-bg px-5 items-center justify-center">
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/60"></div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 h-full md:px-20 flex  text-white justify-between py-16 lg:px-20 px-4">
+          <div className='pt-5'>
+            <h1 className="text-5xl md:text-7xl font-semibold mb-4">
+              Game-Changing<br />
+              ERP <br />
+              <span className="text-orange-500">Solutions</span>
+            </h1>
+            <p className="font-light text-lg mb-6">
+              Through our solutions, we empower organizations to realize<br />
+              a Return On Investment (ROI) and make informed decisions.
+            </p>
+            <a
+              href="/courses"
+              className="inline-block bg-orange-500 text-white px-6 py-3 mt-5 rounded hover:bg-orange-600 w-fit"
+            >
+              Explore Our Products
+            </a>
+          </div>
+
+          <div>
+            <img src={Learnsoft} alt=""  className='h-[60vh] rounded-2xl'/>
+          </div>
+        </div>
+      </section>
+
+      {/* overview section */}
+
+      <section id='Overview' className='w-full  bg-gray-100'>
+        <div className="max-w-7xl mx-auto font-bold py-20 lg:px-30 px-4">
+         <h1 className="text-4xl text-black mb-6">
+          What is Enterprise Resource Planning (E.R.P) Software?
+        </h1>
+    <p className="font-medium text-gray-700 leading-relaxed max-w-5xl ">
+    Enterprise Resource Planning (ERP) software is a powerful all-in-one system designed to help businesses manage their day-to-day operations — including sales, inventory, accounting, payroll, human resources, and customer relationships — all from a single, connected platform.
+    <br /><br />
+    By bringing your key business functions together, an ERP system gives you real-time visibility, improves team collaboration, reduces manual work, and helps you make smarter, faster decisions. It’s the backbone of modern, efficient, and scalable business operations.
+    </p>
+    </div>
+      </section>
+
+      {/* About Us */}
+      <section>
+        <p>Learnsoft Beliotech Solutions is an award-winning company based in the vibrant Kenyan capital, Nairobi. We specialize in cutting-edge Software Design and Development, Process Automation through ERPs, and Graphic Design work.
+
+As the leading provider of ERPS, our expertise extends across the Finance, Education, Health, and ICT sectors. Our flagship product, Learnsoft SchoolERP, is currently deployed in over 300 schools spanning Kenya, Uganda, and Tanzania.
+
+At Learnsoft Beliotech Solutions, we take pride in tailoring our software products to meet the unique needs of our clients. Our mission is to automate various sectors of the Kenyan economy, providing affordable, efficient, and reliable systems. Through our solutions, we empower organizations to realize a return on investment (ROI) and make informed decisions based on accurate data generated by our systems.</p>
+      </section>
     </>
   )
 }
