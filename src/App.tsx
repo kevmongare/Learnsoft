@@ -1,8 +1,32 @@
 import './App.css'
+import { useEffect } from 'react';
 import Learnsoft from './assets/learnsoft.png'
 import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 
 function App() {
+   // ✅ Proper way to interact with the DOM in React
+  useEffect(() => {
+    const menuBtn = document.getElementById('menu-btn');
+    const menu = document.getElementById('menu');
+
+    const toggleMenu = () => {
+      if (menu) {
+        menu.classList.toggle('hidden');
+      }
+    };
+
+    if (menuBtn) {
+      menuBtn.addEventListener('click', toggleMenu);
+    }
+
+    // ✅ Clean up to avoid memory leaks
+    return () => {
+      if (menuBtn) {
+        menuBtn.removeEventListener('click', toggleMenu);
+      }
+    };
+  }, []); // Runs once after component mounts
+
   return (
     <>
       {/* ✅ Sticky Menu Bar */}
@@ -13,13 +37,14 @@ function App() {
             <span className="text-xs font-light">solutions</span>
           </h1>
 
-          <nav className="hidden md:flex space-x-6">
-            <a href="#" className="text-gray-900 hover:text-orange-600">Home</a>
-            <a href="#Overview" className="text-gray-900 hover:text-orange-600">Overview</a>
-            <a href="#Aboutus" className="text-gray-900 hover:text-orange-600">About Us</a>
-            <a href="#" className="text-gray-900 hover:text-orange-600">Products</a>
-            <a href="#services" className="text-gray-900 hover:text-orange-600">Services</a>
-            <a href="#contact" className="text-gray-900 hover:text-orange-600">Contact Us</a>
+          <nav className="hidden md:flex absolute top-16 left-0 w-full bg-blue-950  md:bg-transparent md:static  md:space-x-6 md:items-center md:w-auto py-3 px-3 space-x-6"
+          id='menu'>
+            <a href="#" className="md:text-gray-900  text-white hover:text-orange-600">Home</a>
+            <a href="#Overview" className="md:text-gray-900  text-white hover:text-orange-600">Overview</a>
+            <a href="#Aboutus" className="md:text-gray-900  text-white hover:text-orange-600">About Us</a>
+            <a href="#" className="md:text-gray-900  text-white hover:text-orange-600">Products</a>
+            <a href="#services" className="md:text-gray-900  text-white hover:text-orange-600">Services</a>
+            <a href="#contact" className="md:text-gray-900  text-white hover:text-orange-600">Contact Us</a>
             <a
               href="#"
               className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-sm font-medium"
@@ -30,14 +55,15 @@ function App() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button className="border border-orange-600 rounded-full py-1 px-4 hover:bg-orange-600 hover:text-white">
+            <button className="border border-orange-600 rounded-full py-1 px-4 hover:bg-orange-600 hover:text-white"
+            id='menu-btn'>
               Menu
             </button>
           </div>
         </div>
       </header>
 
-      {/* ✅ Hero Section with External CSS background */}
+      {/* ✅ Hero Section with External CSS background linked on the app.css*/}
       <section className="relative w-full h-full md:h-[70vh] hero-bg px-5 items-center justify-center">
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/60"></div>
@@ -88,7 +114,7 @@ function App() {
             </div>
 
             {/* Section 2: Why You Need ERP */}
-            <div className="max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-100 shadow-md">
+            <div className="max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-50 shadow-md">
               <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
                 Why Your Business Needs ERP
               </h2>
