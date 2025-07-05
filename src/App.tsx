@@ -44,13 +44,13 @@ function App() {
 
         {/* Hero Content */}
         <div className="relative z-10 h-full md:px-20 grid md:flex  text-white justify-between py-16 lg:px-20 px-4">
-          <div className='pt-5'>
-            <h1 className="text-5xl md:text-7xl font-semibold mb-4">
+          <div className='pt-5 text-center md:text-start'>
+            <h1 className="text-4xl md:text-7xl text-start font-semibold mb-4">
               Game-Changing<br />
               ERP <br />
               <span className="text-orange-500">Solutions</span>
             </h1>
-            <p className="font-light text-lg mb-6">
+            <p className="font-light md:text-lg  mb-6">
               Through our solutions, we empower organizations to realize<br />
               a Return On Investment (ROI) and make informed decisions.
             </p>
