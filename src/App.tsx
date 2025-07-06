@@ -91,7 +91,7 @@ function App() {
             <motion.p 
             initial={{ x: -100 }}
             animate={{ x: 0 }}
-              className="font-light md:text-lg  mb-6">
+              className="font-light md:text-lg  mb-6 text-start">
               Through our solutions, we empower organizations to realize<br />
               a Return On Investment (ROI) and make informed decisions.
             </motion.p>
@@ -166,7 +166,7 @@ function App() {
       href={whatsappURL}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-10 right-10 z-50 bg-orange-500 text-white rounded-full p-4 shadow-lg hover:bg-orange-600 transition"
+      className="fixed bottom-10 right-10 z-50 bg-orange-500 text-white rounded-full p-4 shadow-lg hover:bg-orange-600  transition  animate-pulse"
     >
        <motion.svg
        whileTap={{ scale: 0.8 }}
@@ -207,9 +207,9 @@ function App() {
           </form>
       </div>
       
-        <hr className='max-w-6xl mx-auto my-5 text-gray-400'/>
-        <footer className='justify-between flex mx-auto w-6xl'>
-        <p className='text-start font-extralight max-w-6xl  text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
+        <hr className='max-w-7xl mx-auto my-5 text-gray-400'/>
+        <footer className='justify-between flex mx-auto max-w-6xl'>
+        <p className='text-sm text-start font-extralight max-w-6xl  text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
         <div>
           <a href="" className='text-gray-400'>FAQ's</a>
         </div>
