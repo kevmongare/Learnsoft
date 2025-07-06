@@ -19,7 +19,7 @@ function App() {
       menuBtn.addEventListener('click', toggleMenu);
     }
 
-    // ✅ Clean up to avoid memory leaks
+  //avoiding memory leaks
     return () => {
       if (menuBtn) {
         menuBtn.removeEventListener('click', toggleMenu);
@@ -37,7 +37,7 @@ function App() {
             <span className="text-xs font-light">solutions</span>
           </h1>
 
-          <nav className="hidden md:flex absolute top-16 left-0 w-full bg-blue-950  md:bg-transparent md:static  md:space-x-6 md:items-center md:w-auto py-3 px-3 space-x-6"
+          <nav className=" hidden md:flex absolute top-16 left-0 w-full bg-blue-950  md:bg-transparent md:static  md:space-x-6 md:items-center md:w-auto py-3 px-3 space-x-4"
           id='menu'>
             <a href="#" className="md:text-gray-900  text-white hover:text-orange-600">Home</a>
             <a href="#Overview" className="md:text-gray-900  text-white hover:text-orange-600">Overview</a>
@@ -47,7 +47,7 @@ function App() {
             <a href="#contact" className="md:text-gray-900  text-white hover:text-orange-600">Contact Us</a>
             <a
               href="#"
-              className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-sm font-medium"
+              className="hidden md:block bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-sm font-medium"
             >
               Access Demo
             </a>
@@ -134,6 +134,37 @@ function App() {
           <p></p>
         </div>
       </section>
+
+
+      {/* Subscription Form */}
+      <div className="bg-blue-950 p-6 text-white placeholder:text-white">
+      <div className='max-w-6xl mx-auto'>
+        <h2 className="text-xl font-bold mb-2">Subscribe to Our Newsletter</h2>
+        <form
+          action="https://YOUR-USERNAME.usX.list-manage.com/subscribe/post?u=XXXXXXX&amp;id=XXXXXXX"
+          method="post"
+          target="_blank"
+          rel="noopener noreferrer"
+          className='grid'
+        >
+          <input
+            type="email"
+            name="EMAIL"
+            placeholder="Enter your email"
+            required
+            className="p-2 border border-gray-300 rounded w-100 mb-3"
+          />
+          <button
+            type="submit"
+            className="w-fit bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            Subscribe
+          </button>
+          </form>
+      </div>
+      <hr className='max-w-6xl mx-auto my-5 text-gray-400'/>
+      <p className='text-start font-extralight max-w-6xl mx-auto text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
+        </div>
     </>
   )
 }
