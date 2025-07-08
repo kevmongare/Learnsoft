@@ -36,6 +36,8 @@ function App() {
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   //whatsapp link for the float icon
 
+  
+
   return (
     <>
       {/* ✅ Sticky Menu Bar */}
@@ -91,7 +93,7 @@ function App() {
             <motion.p 
             initial={{ x: -100 }}
             animate={{ x: 0 }}
-              className="font-light md:text-lg  mb-6 text-start">
+              className="font-light md:text-lg  mb-6 text-start ">
               Through our solutions, we empower organizations to realize<br />
               a Return On Investment (ROI) and make informed decisions.
             </motion.p>
@@ -157,6 +159,9 @@ function App() {
       </section>
 
       {/* products */}
+      <div className=''>
+
+      </div>
       
 
       {/* services */}
@@ -181,40 +186,77 @@ function App() {
 
 
       {/* Subscription Form */}
-      <div className="bg-blue-950 p-6 text-white placeholder:text-white">
-      <div className='max-w-6xl mx-auto'>
-        <h2 className="text-xl font-bold mb-2">Subscribe to Our Newsletter</h2>
-        <form
-          action="https://YOUR-USERNAME.usX.list-manage.com/subscribe/post?u=XXXXXXX&amp;id=XXXXXXX"
-          method="post"
-          target="_blank"
-          rel="noopener noreferrer"
-          className='grid'
-        >
-          <input
-            type="email"
-            name="EMAIL"
-            placeholder="Enter your email"
-            required
-            className="p-2 border border-orange-500 rounded w-80 bg-white md:w-100 mb-3 text-black"
-          />
-          <button
-            type="submit"
-            className="w-fit bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded"
+      <div className="bg-blue-950 p-6 text-white placeholder:text-white ">
+        <div className='max-w-7xl md:flex md:justify-center grid mx-auto gap-x-[10px]'>
+          <div>
+            <h2 className="text-2xl font-bold text-center text-white mb-6">Address</h2>
+              <div className="space-y-4">
+                  <div className="flex items-start space-x-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 9V7a5 5 0 00-10 0v2M5 9h14v10a2 2 0 01-2 2H7a2 2 0 01-2-2V9z" />
+                  </svg>
+                  <p className="text-gray-400">
+                      Westwoods Building, Parklands - Nairobi<br />
+                      Nairobi, Kenya
+                  </p>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 12h2a2 2 0 012 2v6a2 2 0 01-2 2h-2M8 12H6a2 2 0 00-2 2v6a2 2 0 002 2h2m8-14V6a4 4 0 00-8 0v2h8z" />
+                  </svg>
+                  <a href="info@learnsoftbeliotechsolutions.co.ke" className="text-white hover:underline">info@learnsoftbeliotechsolutions.co.ke</a>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 5h2l3.6 7.59a1 1 0 00.9.41h7.02a1 1 0 00.92-.61l3.38-7.09M16 21a2 2 0 100-4 2 2 0 000 4zm-8 0a2 2 0 100-4 2 2 0 000 4z" />
+                  </svg>
+                  <a href="tel:+254712345678" className="text-white hover:underline">+254 712 345 678</a>
+                  </div>
+                  <div className="mt-6">
+              </div>
+              </div>
+          </div>
+                <div className=' mx-auto'>
+          <h2 className="text-xl font-bold mb-2">Subscribe to Our Newsletter</h2>
+          <form
+            action="https://YOUR-USERNAME.usX.list-manage.com/subscribe/post?u=XXXXXXX&amp;id=XXXXXXX"
+            method="post"
+            target="_blank"
+            rel="noopener noreferrer"
+            className='grid'
           >
-            Subscribe
-          </button>
-          </form>
-      </div>
-      
+            <input
+              type="email"
+              name="EMAIL"
+              placeholder="Enter your email"
+              required
+              className="p-2 border border-orange-500 rounded w-80 bg-white md:w-100 mb-3 text-black"
+            />
+            <button
+              type="submit"
+              className="w-fit bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded"
+            >
+              Subscribe
+            </button>
+            </form>
+                </div>
+                <iframe className = "w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
+              loading="lazy"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske">
+          
+              </iframe>
+        </div>
+         </div>
+      <footer className='justify-between flex mx-auto  bg-blue-950 w-full'>
         <hr className='max-w-7xl mx-auto my-5 text-gray-400'/>
-        <footer className='justify-between flex mx-auto max-w-6xl'>
         <p className=' text-[8px] md:text-sm text-start font-extralight max-w-6xl  text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
         <div>
           <a href="" className='text-gray-400'>FAQ's</a>
         </div>
       </footer>
-      </div>
     </>
   )
 }
