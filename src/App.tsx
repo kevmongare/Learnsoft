@@ -37,10 +37,10 @@ function App() {
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   //whatsapp link for the float icon
 
-  //mailchimp initialization
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const [emailMessage, setMessage] = useState("");
+  // //mailchimp initialization
+  // const [email, setEmail] = useState("");
+  // const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  // const [emailMessage, setMessage] = useState("");
   
 
   
