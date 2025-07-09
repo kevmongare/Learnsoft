@@ -166,7 +166,7 @@ function App() {
       </section>
 
       {/* products */}
-      {/* services */}
+      
       <div className="flex columns-auto max-w-7xl mx-auto px-5 py-8">
             <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
                 
