@@ -166,46 +166,11 @@ function App() {
       </section>
 
       {/* products */}
-      {/* services */}
-      <div className="flex columns-auto max-w-7xl mx-auto px-5 py-8">
-            <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-                
-                <img src="4.jpeg" alt="" 
-                className="h-50 object-cover mx-auto  w-80"/>
-                
-                <h1 className="ml-5 text-2xl font-semibold text-black pt-5">Project Management</h1>
-                <p className="text-gray-600 p-2 ml-5 text-sm"> ERP 
-                </p>
-                <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-            </div>
-            <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-                
-                <img src="" alt="" 
-                className="h-50 object-cover mx-auto  w-80"/>
-                <h1 className="ml-5 text-2xl font-semibold text-black pt-5">School ERP</h1>
-                <p className="text-gray-600 p-2 ml-5 text-sm"> ERP
-                </p>
-                <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-            </div>
-            <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-                
-                <img src="" alt="" 
-                className="h-50 object-cover mx-auto  w-80"/>
-                <h1 className="ml-5 text-2xl font-semibold text-black pt-5"> HR</h1>
-                <p className="text-gray-600 p-2 ml-5 text-sm"> ERP
-                </p>
-                <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-            </div>
-            <div className=" overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-                
-                <img src ="/1.jpeg" alt="" 
-                className="h-50 object-cover mx-auto  w-80"/>
-                <h1 className="ml-5 text-2xl font-semibold text-black pt-5">supply chain</h1>
-                <p className="text-gray-600 p-2 ml-5 text-sm"> ERP 
-                </p>
-                <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-            </div>
-        </div>
+      <div className=''>
+
+      </div>
+      
+
       {/* services */}
 
       {/* contaact Us */}
