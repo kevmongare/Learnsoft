@@ -1,6 +1,6 @@
 import './App.css'
 import { motion} from "framer-motion";
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import Learnsoft from './assets/learnsoft.png'
 import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 
