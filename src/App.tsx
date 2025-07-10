@@ -326,7 +326,7 @@ function App() {
               </div>
               </div>
           </div>
-                <iframe className = "w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
+                <iframe className = "w-100 md:w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
               loading="lazy"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske">
           
