@@ -227,7 +227,7 @@ function App() {
     </section>
     {/* products */}
       
-      <div>
+      {/* <div>
         <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
         Our Products
       </h2>
@@ -271,7 +271,7 @@ function App() {
                   <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
               </div>
           </div>
-      </div>
+      </div> */}
 
       {/* contaact Us */}
        <a
@@ -326,30 +326,6 @@ function App() {
               </div>
               </div>
           </div>
-                <div className=' mx-auto'>
-          <h2 className="text-xl font-bold mb-2">Subscribe to Our Newsletter</h2>
-          <form
-            action="https://YOUR-USERNAME.usX.list-manage.com/subscribe/post?u=XXXXXXX&amp;id=XXXXXXX"
-            method="post"
-            target="_blank"
-            rel="noopener noreferrer"
-            className='grid'
-          >
-            <input
-              type="email"
-              name="EMAIL"
-              placeholder="Enter your email"
-              required
-              className="p-2 border border-orange-500 rounded w-80 bg-white md:w-100 mb-3 text-black"
-            />
-            <button
-              type="submit"
-              className="w-fit bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded"
-            >
-              Subscribe
-            </button>
-            </form>
-                </div>
                 <iframe className = "w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
               loading="lazy"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske">
