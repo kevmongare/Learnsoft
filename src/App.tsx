@@ -6,6 +6,8 @@ import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
 
 
+//services
+
 const services = [
   {
     title: "Mobile App Development",
@@ -35,6 +37,39 @@ const services = [
   },
 ];
 
+//Products
+
+const products = [
+  {
+    title: "ERP System",
+    description:
+      "A powerful all-in-one platform to manage sales, inventory, payroll, HR, and finance.",
+    image:
+      "https://images.ctfassets.net/lzny33ho1g45/1FzzuoyZ554G7ApEDxJZJJ/e8f00ca2c12848541ae01a2dee00f003/0aca5b23-e069-40b7-abce-a0fc846cd857.png",
+  },
+  {
+    title: "School Management System",
+    description:
+      "Modernize school operations with digital attendance, grading, timetabling, and more.",
+    image:
+      "https://i0.wp.com/inceptor.co.ke/wp-content/uploads/2019/09/school-management-system-in-Kenya-Inceptor.png?ssl=1",
+  },
+  {
+    title: "Healthcare Software",
+    description:
+      "Manage patient records, appointments, and billing with ease and security.",
+    image:
+      "https://images.ctfassets.net/lzny33ho1g45/1FzzuoyZ554G7ApEDxJZJJ/e8f00ca2c12848541ae01a2dee00f003/0aca5b23-e069-40b7-abce-a0fc846cd857.png",
+  },
+  {
+    title: "HR & Payroll System",
+    description:
+      "Streamline your human resource operations including payroll and performance tracking.",
+    image:
+      "https://uk.adp.com/-/media/adpuk/redesign2019/images/what-we-offer/products/ihcm/new-ihcm2/ihcm2-corehr.png?rev=2d7b935fcbf8479e94c88ac082bb83b4&la=en&h=348&w=586&hash=2E478FDC38FADA316F7CA1ADA3C9E412",
+  },
+];
+//
 
 function App() {
 
@@ -91,9 +126,9 @@ function App() {
           id='menu'>
             <a href="#" className="md:text-gray-900  text-white hover:text-orange-600">Home</a>
             <a href="#Overview" className="md:text-gray-900  text-white hover:text-orange-600">Overview</a>
-            <a href="#Aboutus" className="md:text-gray-900  text-white hover:text-orange-600">About Us</a>
             <a href="#" className="md:text-gray-900  text-white hover:text-orange-600">Products</a>
             <a href="#services" className="md:text-gray-900  text-white hover:text-orange-600">Services</a>
+            <a href="#Aboutus" className="md:text-gray-900  text-white hover:text-orange-600">About Us</a>
             <a href="#contact" className="md:text-gray-900  text-white hover:text-orange-600">Contact Us</a>
             <a
               href="#"
@@ -189,14 +224,6 @@ function App() {
      </section>
 
 
-      {/* About Us */}
-      <section id='Aboutus' className='w-ful'>
-        <div className='max-w-7xl mx-auto font-bold py-20 lg:px-30 px-4'>
-          <h1 className='text-4xl text-black mb-6'>About Us</h1>
-          <p></p>
-        </div>
-      </section>
-
       {/* services */}
       <section
       id="services"
@@ -226,6 +253,42 @@ function App() {
       </div>
     </section>
     {/* products */}
+    <section id="products" className="bg-white py-20 px-5 lg:px-20">
+      <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
+        Our Products
+      </h2>
+      <div className="flex flex-col gap-16 max-w-6xl mx-auto">
+        {products.map((product, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, x: idx % 2 === 0 ? -100 : 100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className={`flex flex-col md:flex-row items-center gap-8 ${
+              idx % 2 === 1 ? "md:flex-row-reverse" : ""
+            }`}
+          >
+            <img
+              src={product.image}
+              alt={product.title}
+              className="h-64 w-full md:w-1/2 object-cover rounded-xl shadow-md"
+            />
+            <div className="md:w-1/2 text-center md:text-left">
+              <h3 className="text-2xl font-semibold text-blue-900 mb-4">
+                {product.title}
+              </h3>
+              <p className="text-gray-700 mb-6">{product.description}</p>
+              <a
+                href="#"
+                className="inline-block bg-orange-500 text-white py-2 px-5 rounded-lg hover:bg-orange-600 transition"
+              >
+                Request Demo
+              </a>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
       
       {/* <div>
         <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
@@ -272,6 +335,84 @@ function App() {
               </div>
           </div>
       </div> */}
+
+
+      {/* About us */}
+      <section id="Aboutus" className="bg-white py-20 px-5 lg:px-20">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold text-blue-950">Who We Are</h1>
+          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+            Learnsoft Beliotech Solutions is a forward-thinking tech company
+            revolutionizing how businesses operate through innovative digital
+            solutions.
+          </p>
+        </motion.div>
+
+        {/* Mission + Vision */}
+        <div className="grid md:grid-cols-2 gap-10 items-start mb-20">
+          <motion.div
+            initial={{ x: -80, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="bg-orange-50 p-6 rounded-lg shadow"
+          >
+            <h3 className="text-xl font-semibold text-orange-500 mb-2">
+              Our Mission
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              To empower organizations of all sizes by delivering cutting-edge,
+              user-friendly digital products that streamline operations and
+              accelerate growth.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ x: 80, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="bg-blue-50 p-6 rounded-lg shadow"
+          >
+            <h3 className="text-xl font-semibold text-blue-700 mb-2">
+              Our Vision
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              To become Africa’s leading software innovation hub by building
+              scalable and impactful digital ecosystems that shape the future.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Highlights */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-center"
+        >
+          {[
+            { title: "10+", subtitle: "Years of Experience" },
+            { title: "500+", subtitle: "Clients Served" },
+            { title: "20+", subtitle: "Enterprise Solutions" },
+            { title: "100%", subtitle: "Customer Satisfaction" },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="p-6 bg-gray-100 rounded-lg shadow hover:shadow-md transition"
+            >
+              <h4 className="text-3xl font-bold text-blue-950">{item.title}</h4>
+              <p className="text-gray-600 mt-2">{item.subtitle}</p>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
 
       {/* contaact Us */}
        <a
@@ -326,7 +467,7 @@ function App() {
               </div>
               </div>
           </div>
-                <iframe className = "w-100 md:w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
+                <iframe className = "w-80 md:w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
               loading="lazy"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske">
           
