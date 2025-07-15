@@ -118,7 +118,7 @@ const [isOpen, setIsOpen] = useState(false);
       </a>
 
       {/* Desktop Menu */}
-      <ul className="hidden md:flex items-center space-x-6 font-medium">
+      <ul className="hidden md:flex items-center space-x-6">
         {navLinks.map(({ href, label }) => (
           <li key={href}>
             <a
@@ -138,13 +138,13 @@ const [isOpen, setIsOpen] = useState(false);
 
       {/* Mobile Menu */}
       {isOpen && (
-        <ul className="md:hidden absolute top-full left-0 w-full bg-[var(--primary)]  shadow-md py-4 px-6 flex flex-col space-y-2">
+        <ul className="md:hidden absolute top-full left-0 w-full bg-blue-950  shadow-md py-4 px-6 flex flex-col space-y-2">
           {navLinks.map(({ href, label }) => (
-            <li key={href} className='md:text-gray-900  text-white hover:text-orange-600'>
+            <li key={href} className='hover:bg-white text-white py-1 pl-5 hover:text-[var(--secondary)] rounded-l-2xl'>
               <a
                 href={href}
                 onClick={() => setIsOpen(false)}
-                className=""
+                className="text-2sm "
               >
                 {label}
               </a>
