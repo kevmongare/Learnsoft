@@ -3,6 +3,7 @@ import { motion} from "framer-motion";
 import { Menu, X } from 'lucide-react';
 import {useState} from 'react';
 import Learnsoft from './assets/learnsoft.png'
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
 
@@ -439,49 +440,113 @@ const [isOpen, setIsOpen] = useState(false);
         <path d="M12.04 2.01A10 10 0 0 0 2 12.06a9.84 9.84 0 0 0 1.37 5.09L2 22l5.07-1.33a9.95 9.95 0 0 0 4.96 1.28H12A10 10 0 0 0 12.04 2zM12 20.08a8.07 8.07 0 0 1-4.1-1.13l-.3-.17-3.02.79.8-2.94-.2-.31a8.04 8.04 0 1 1 14.9-4.27 8.03 8.03 0 0 1-8.08 8.03zm4.62-6.03c-.26-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.66.83-.81 1-.3.2-.56.07a6.6 6.6 0 0 1-1.94-1.2 7.4 7.4 0 0 1-1.37-1.7c-.14-.26 0-.4.12-.53.12-.13.26-.3.4-.45.14-.15.2-.26.3-.43a.5.5 0 0 0-.02-.48c-.07-.14-.57-1.37-.78-1.87s-.4-.42-.56-.43h-.48a.92.92 0 0 0-.67.31 2.78 2.78 0 0 0-.86 2.06c0 1.22.87 2.4 1 2.57.13.17 1.7 2.6 4.13 3.64.58.25 1.04.4 1.4.51a3.35 3.35 0 0 0 1.56.1 2.66 2.66 0 0 0 1.75-1.22c.22-.3.22-.54.16-.74s-.24-.17-.5-.3z" />
       </motion.svg>
     </a>
+    {/* contact Us */}
+    <section id="contact" className="bg-white py-20 px-5 lg:px-20">
+            {/* Main Section Title */}
+            <div className="text-center mb-16">
+                <h1 className="text-5xl font-bold text-blue-950 mb-3">Contact Learnsoft</h1>
+                <p className="text-gray-600 text-lg">
+                    Have a question, proposal, or want to work with us? Reach out — we're here to help!
+                </p>
+            </div>
+
+            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+                {/* Contact Info */}
+                <motion.div
+                    initial={{ x: -60, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <h2 className="text-3xl font-bold text-blue-950 mb-6">Get in Touch</h2>
+                    <p className="text-gray-600 mb-6">
+                        Let’s talk! Fill out the form or reach us directly — we’re here to support your digital transformation journey.
+                    </p>
+
+                    <div className="space-y-4">
+                        <div className="flex items-start gap-4">
+                            <FaMapMarkerAlt className="text-orange-500 text-xl mt-1" />
+                            <p>123 Smart Avenue, Nairobi, Kenya</p>
+                        </div>
+                        <div className="flex items-start gap-4">
+                            <FaPhoneAlt className="text-orange-500 text-xl mt-1" />
+                            <p>+254 700 000 000</p>
+                        </div>
+                        <div className="flex items-start gap-4">
+                            <FaEnvelope className="text-orange-500 text-xl mt-1" />
+                            <p>info@learnsoft.co.ke</p>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Contact Form */}
+                <motion.form
+                    initial={{ x: 60, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    className="bg-gray-50 p-8 rounded-lg shadow-lg space-y-6"
+                >
+                    <div>
+                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            placeholder="Your name"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            placeholder="you@example.com"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                            Message
+                        </label>
+                        <textarea
+                            rows={5}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            placeholder="Your message"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition"
+                    >
+                        Send Message
+                    </button>
+                </motion.form>
+            </div>
+
+            {/* Google Map */}
+            <div className="mt-20 rounded-lg overflow-hidden shadow-lg">
+                <iframe
+                    title="Learnsoft Location"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
+                    width="100%"
+                    height="300"
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+            </div>
+        </section>
 
 
-      {/* Subscription Form */}
-      <div className="bg-blue-950 p-6 text-white placeholder:text-white ">
-        <div className='max-w-7xl md:flex md:justify-center grid mx-auto gap-x-[10px]'>
-          <div>
-            <h2 className="text-2xl font-bold text-center text-white mb-6">Address</h2>
-              <div className="space-y-4">
-                  <div className="flex items-start space-x-4">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M17 9V7a5 5 0 00-10 0v2M5 9h14v10a2 2 0 01-2 2H7a2 2 0 01-2-2V9z" />
-                  </svg>
-                  <p className="text-gray-400">
-                      Westwoods Building, Parklands - Nairobi<br />
-                      Nairobi, Kenya
-                  </p>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M16 12h2a2 2 0 012 2v6a2 2 0 01-2 2h-2M8 12H6a2 2 0 00-2 2v6a2 2 0 002 2h2m8-14V6a4 4 0 00-8 0v2h8z" />
-                  </svg>
-                  <a href="info@learnsoftbeliotechsolutions.co.ke" className="text-white hover:underline">info@learnsoftbeliotechsolutions.co.ke</a>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 5h2l3.6 7.59a1 1 0 00.9.41h7.02a1 1 0 00.92-.61l3.38-7.09M16 21a2 2 0 100-4 2 2 0 000 4zm-8 0a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
-                  <a href="tel:+254712345678" className="text-white hover:underline">+254 712 345 678</a>
-                  </div>
-                  <div className="mt-6">
-              </div>
-              </div>
-          </div>
-                <iframe className = "w-80 md:w-150 h=150 shadow-2xl rounded-2xl referrerpolicy="
-              loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske">
-          
-              </iframe>
-        </div>
-         </div>
+      {/* footer*/}
+      
       <footer className='justify-between flex mx-auto  bg-blue-950 w-full'>
         <hr className='max-w-7xl mx-auto my-5 text-gray-400'/>
         <p className=' text-[8px] md:text-sm text-start font-extralight max-w-6xl  text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
