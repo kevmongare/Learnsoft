@@ -1,11 +1,12 @@
 import './App.css'
 import { motion} from "framer-motion";
 import { Menu, X } from 'lucide-react';
-import {useState} from 'react';
+
 import Learnsoft from './assets/learnsoft.png'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 //menu
 
@@ -85,6 +86,15 @@ const products = [
 //
 
 function App() {
+  //fetching content from our backend that gets data from the admin portal
+  const [content, setContent] = useState({ h1: "", p: "" });
+
+  useEffect(() => {
+    fetch("http://localhost:8000/content")
+      .then((res) => res.json())
+      .then((data) => setContent(data))
+      .catch((err) => console.error("Failed to load content:", err));
+  }, []);
 
 const [isOpen, setIsOpen] = useState(false);
 
@@ -168,17 +178,16 @@ const [isOpen, setIsOpen] = useState(false);
         {/* Hero Content */}
         <div className="relative z-10 h-full md:px-20 grid md:flex  text-white justify-between py-16 lg:px-20 px-4">
           <div className='pt-5 text-center md:text-start'>
-            <h1 className="text-4xl md:text-7xl text-start font-semibold mb-4">
-              Game-Changing<br />
+            <h1 className="text-4xl md:text-7xl text-start font-semibold mb-4">{content.h1}
+              {/* Game-Changing<br />
               ERP <br />
-              <span className="text-orange-500">Solutions</span>
+              <span className="text-orange-500">Solutions</span> */}
             </h1>
             <motion.p 
             initial={{ x: -100 }}
             animate={{ x: 0 }}
               className="font-light md:text-lg  mb-6 text-start ">
-              Through our solutions, we empower organizations to realize<br />
-              a Return On Investment (ROI) and make informed decisions.
+             {content.p}
             </motion.p>
             <motion.a
             whileTap={{ scale: 0.8 }}
