@@ -8,7 +8,7 @@ import background from '/AutomationBg.png'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 // import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
-// import { useEffect, useState } from "react";
+import {useState } from "react";
 
 //menu
 
