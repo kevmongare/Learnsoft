@@ -6,7 +6,7 @@ import { Menu, X } from 'lucide-react';
 import Logo from '/Logo.png'
 import background from '/AutomationBg.png'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
+// import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
@@ -89,7 +89,7 @@ const products = [
 
 function App() {
   //fetching content from our backend that gets data from the admin portal
-  const [content, setContent] = useState({ h1: "", p: "" });
+  const [ setContent] = useState({ h1: "", p: "" });
 
   useEffect(() => {
     fetch("http://localhost:8000/content")
