@@ -1,8 +1,10 @@
 import './App.css'
-import { motion} from "framer-motion";
+import { motion } from "framer-motion";
 import { Menu, X } from 'lucide-react';
 
-import Learnsoft from './assets/learnsoft.png'
+// import Learnsoft from './assets/learnsoft.png'
+import Logo from '/Logo.png'
+import background from '/AutomationBg.png'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
@@ -96,13 +98,13 @@ function App() {
       .catch((err) => console.error("Failed to load content:", err));
   }, []);
 
-const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
- // Runs once after component mounts
+  // Runs once after component mounts
 
   //whatsapp connection contact and message
-  const phoneNumber = "254706384510"; 
+  const phoneNumber = "254706384510";
   const message = "Hello! I'm interested in your services.";
 
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -112,202 +114,198 @@ const [isOpen, setIsOpen] = useState(false);
   // const [email, setEmail] = useState("");
   // const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   // const [emailMessage, setMessage] = useState("");
-  
 
-  
+
+
 
   return (
     <>
       {/* ✅ Sticky Menu Bar */}
       <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-md">
         <div className="px-5 md:px-20 py-4 flex justify-between items-center">
-        <a href="#home" aria-label="Homepage">
-        <h1 className="font-extrabold text-3xl cursor-pointer text-blue-950">
+          <a href="#home" aria-label="Homepage">
+            <img src={Logo} alt="" className='h-15' />
+
+            {/*<h1 className="font-extrabold text-3xl cursor-pointer text-blue-950">
             Learn<span className="text-orange-500">Soft</span>
             <span className="text-xs font-light">solutions</span>
-          </h1>
-      </a>
+          </h1>*/}
+          </a>
 
-      {/* Desktop Menu */}
-      <ul className="hidden md:flex items-center space-x-6">
-        {navLinks.map(({ href, label }) => (
-          <li key={href}>
-            <a
-              href={href}
-              className="text-sm md:text-4sm text-gray-800 hover:text-[var(--primary)] focus:text-[var(--secondary)]"
-            >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex items-center space-x-6">
+            {navLinks.map(({ href, label }) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  className="text-sm md:text-4sm text-gray-800 hover:text-[var(--primary)] focus:text-[var(--secondary)]"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
 
-      {/* Hamburger Menu */}
-      <button onClick={toggleMenu} className="md:hidden text-gray-700">
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+          {/* Hamburger Menu */}
+          <button onClick={toggleMenu} className="md:hidden text-gray-700">
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <ul className="md:hidden absolute top-full left-0 w-full bg-blue-950  shadow-md py-4 px-6 flex flex-col space-y-2">
-          {navLinks.map(({ href, label }) => (
-            <li key={href} className='hover:bg-white text-white py-1 pl-5 hover:text-[var(--secondary)] rounded-l-2xl'>
-              <a
-                href={href}
-                onClick={() => setIsOpen(false)}
-                className="text-2sm "
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    
-         </div> 
+          {/* Mobile Menu */}
+          {isOpen && (
+            <ul className="md:hidden absolute top-full left-0 w-full bg-blue-950  shadow-md py-4 px-6 flex flex-col space-y-2">
+              {navLinks.map(({ href, label }) => (
+                <li key={href} className='hover:bg-white text-white py-1 pl-5 hover:text-[var(--secondary)] rounded-l-2xl'>
+                  <a
+                    href={href}
+                    onClick={() => setIsOpen(false)}
+                    className="text-2sm "
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+
+        </div>
       </header>
 
       {/* ✅ Hero Section with External CSS background linked on the app.css*/}
-      <motion.section 
-      initial={{ scale: 0.8 }}
-      animate={{ scale: 1 }}
-      className="relative w-full h-full md:h-[70vh] hero-bg px-5 items-center justify-center">
+      <motion.section
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        className="relative w-full h-full md:h-[80vh] hero-bg px-5 items-center justify-center">
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-black/70"></div>
 
         {/* Hero Content */}
-        <div className="relative z-10 h-full md:px-20 grid md:flex  text-white justify-between py-16 lg:px-20 px-4">
-          <div className='pt-5 text-center md:text-start'>
-            <h1 className="text-4xl md:text-7xl text-start font-semibold mb-4">{content.h1}
-              {/* Game-Changing<br />
-              ERP <br />
-              <span className="text-orange-500">Solutions</span> */}
-            </h1>
-            <motion.p 
-            initial={{ x: -100 }}
-            animate={{ x: 0 }}
-              className="font-light md:text-lg  mb-6 text-start ">
-             {content.p}
-            </motion.p>
-            <motion.a
-            whileTap={{ scale: 0.8 }}
-            
-              href="/courses"
-              className="inline-block bg-orange-500 text-white px-6 py-3 mt-5 rounded hover:bg-orange-600 w-fit"
-            >
-              Explore Our Products
-            </motion.a>
+        <div className="relative z-10 h-[80vh] md:px-20 grid md:flex  text-white justify-between items-center lg:px-20 px-4">
+          <div className='text-start'>
+            <div className="relative z-10 items-center fade-in">
+              <p className="shadow-md bg-black w-fit px-5 text-[var(--primary-color)] my-8 py-2 rounded-full text-start">
+                <span className="text-blue-600">✧</span> AI-Powered Business Solutions
+              </p>
+              <h1 className="font-extrabold bg-clip-text text-transparent bg-linear-to-l from-white to-100% to-gray-500  md:text-6xl text-4xl font-stretch-110%">
+                We Buy You Time <span className="text-gray-100 md:text-6xl text-4xl font-stretch-100%"><br />You Focus On<br />Making More Money</span>
+              </h1>
+
+              <div className="space-x-4 py-8">
+                <button className="bg-gradient-to-l shadow shadow-white from-black/50 to-200% to-blue-500  px-4 py-4 rounded-md text-[var(--primary-color)]">Book A Free Consultation</button>
+
+              </div>
+            </div>
           </div>
 
-          <div>
-            <img src={Learnsoft} alt=""  className='hidden md:block h-100 rounded-2xl'/>
+
+          <div className='items-center shadow-2xl shadow-blue-700'>
+            <img src={background} alt="" className='h-110' />
           </div>
         </div>
       </motion.section>
 
       {/* overview section */}
 
-  <section id="Overview" className="w-full bg-white">
-            {/* Section 1: What is ERP */}
-            <div className="max-w-7xl mx-auto py-20 px-4 lg:px-20">
-              <h1 className="text-4xl font-bold text-black mb-6">
-                What is Enterprise Resource Planning (E.R.P) Software?
-              </h1>
-              <div className='justify-between md:flex grid'>
-                <motion.p 
-                initial={{ x: -100, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 1 }}
-                className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
-                  Enterprise Resource Planning (ERP) software is a powerful all-in-one system that helps businesses manage their daily operations — including sales, inventory, accounting, payroll, human resources, and customer relationships — all from a single, connected platform.
-                  <br /><br />
-                  At <span className="text-blue-950 font-semibold">Learnsoft Beliotech Solutions</span>, our ERP systems bring all your key business functions together in one place. With real-time visibility, streamlined workflows, and enhanced collaboration across departments, our ERP helps your team reduce manual work, make smarter decisions, and operate more efficiently. It’s the foundation for modern, scalable business growth.
-                </motion.p>
-                <img src={SchoolErp} alt="" className='mx-auto h-60 md:h-80 pl-5'/>
-                
-              </div>
-            </div>
+      <section id="Overview" className="w-full bg-white">
+        {/* Section 1: What is ERP */}
+        <div className="max-w-7xl mx-auto py-20 px-4 lg:px-20">
+          <h1 className="text-4xl font-bold text-black mb-6">
+            What is A.I Agent?
+          </h1>
+          <div className='justify-between md:flex grid'>
+            <motion.p
+              initial={{ x: -100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1 }}
+              className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
+              Enterprise Resource Planning (ERP) software is a powerful all-in-one system that helps businesses manage their daily operations — including sales, inventory, accounting, payroll, human resources, and customer relationships — all from a single, connected platform.
+              <br /><br />
+              At <span className="text-blue-950 font-semibold">Learnsoft Beliotech Solutions</span>, our ERP systems bring all your key business functions together in one place. With real-time visibility, streamlined workflows, and enhanced collaboration across departments, our ERP helps your team reduce manual work, make smarter decisions, and operate more efficiently. It’s the foundation for modern, scalable business growth.
+            </motion.p>
+            <img src={background} alt="" className='mx-auto h-60 md:h-80 pl-5' />
 
-            {/* Section 2: Why You Need ERP */}
-            <div className="max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-50 shadow-md">
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
-                Why Your Business Needs ERP
-              </h2>
-              <p className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
-                No more juggling between disconnected systems. With ERP, your team works with the same real-time data — reducing errors, saving time, and improving accuracy across the board. From sales and finance to HR and inventory, you gain a clear and unified view of your business performance.
-                <br /><br />
-                ERP empowers your business to automate repetitive tasks, reduce operational costs, and keep every department aligned. Whether you're a fast-growing startup or an established company, ERP gives you the control and flexibility to scale confidently — acting as the command center for smarter, more strategic growth.
-              </p>
-            </div>
-     </section>
+          </div>
+        </div>
+
+        {/* Section 2: Why You Need ERP */}
+        <div className="max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-50 shadow-md">
+          <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
+            Why Your Business Needs ERP
+          </h2>
+          <p className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
+            No more juggling between disconnected systems. With ERP, your team works with the same real-time data — reducing errors, saving time, and improving accuracy across the board. From sales and finance to HR and inventory, you gain a clear and unified view of your business performance.
+            <br /><br />
+            ERP empowers your business to automate repetitive tasks, reduce operational costs, and keep every department aligned. Whether you're a fast-growing startup or an established company, ERP gives you the control and flexibility to scale confidently — acting as the command center for smarter, more strategic growth.
+          </p>
+        </div>
+      </section>
 
 
       {/* services */}
       <section
-      id="services"
-      className="bg-gradient-to-b from-gray-50 to-white py-20 px-5 lg:px-20"
-    >
-      <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
-        Our Services
-      </h2>
-      <div className="flex flex-wrap justify-center gap-10 max-w-7xl mx-auto">
-        {services.map((service, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.15, duration: 0.5 }}
-            className="bg-white rounded-xl p-6 w-72 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
-          >
-            <div className="mb-4 flex justify-center">{service.icon}</div>
-            <h3 className="text-lg font-bold text-blue-900 mb-2 text-center">
-              {service.title}
-            </h3>
-            <p className="text-gray-600 text-sm text-center">
-              {service.description}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-    {/* products */}
-    <section id="products" className="bg-white py-20 px-5 lg:px-20">
-      <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
-        Our Products
-      </h2>
-      <div className="flex flex-col gap-16 max-w-6xl mx-auto">
-        {products.map((product, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, x: idx % 2 === 0 ? -100 : 100 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className={`flex flex-col md:flex-row items-center gap-8 ${
-              idx % 2 === 1 ? "md:flex-row-reverse" : ""
-            }`}
-          >
-            <img
-              src={product.image}
-              alt={product.title}
-              className="h-64 w-full md:w-1/2 object-cover rounded-xl shadow-md"
-            />
-            <div className="md:w-1/2 text-center md:text-left">
-              <h3 className="text-2xl font-semibold text-blue-900 mb-4">
-                {product.title}
+        id="services"
+        className="bg-gradient-to-b from-gray-50 to-white py-20 px-5 lg:px-20"
+      >
+        <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
+          Our Services
+        </h2>
+        <div className="flex flex-wrap justify-center gap-10 max-w-7xl mx-auto">
+          {services.map((service, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.15, duration: 0.5 }}
+              className="bg-white rounded-xl p-6 w-72 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
+            >
+              <div className="mb-4 flex justify-center">{service.icon}</div>
+              <h3 className="text-lg font-bold text-blue-900 mb-2 text-center">
+                {service.title}
               </h3>
-              <p className="text-gray-700 mb-6">{product.description}</p>
-              <a
-                href="#"
-                className="inline-block bg-orange-500 text-white py-2 px-5 rounded-lg hover:bg-orange-600 transition"
-              >
-                Request Demo
-              </a>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-      
+              <p className="text-gray-600 text-sm text-center">
+                {service.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+      {/* products */}
+      <section id="products" className="bg-white py-20 px-5 lg:px-20">
+        <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
+          Our Products
+        </h2>
+        <div className="flex flex-col gap-16 max-w-6xl mx-auto">
+          {products.map((product, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -100 : 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 === 1 ? "md:flex-row-reverse" : ""
+                }`}
+            >
+              <img
+                src={product.image}
+                alt={product.title}
+                className="h-64 w-full md:w-1/2 object-cover rounded-xl shadow-md"
+              />
+              <div className="md:w-1/2 text-center md:text-left">
+                <h3 className="text-2xl font-semibold text-blue-900 mb-4">
+                  {product.title}
+                </h3>
+                <p className="text-gray-700 mb-6">{product.description}</p>
+                <a
+                  href="#"
+                  className="inline-block bg-orange-500 text-white py-2 px-5 rounded-lg hover:bg-orange-600 transition"
+                >
+                  Request Demo
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       {/* <div>
         <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
         Our Products
@@ -357,207 +355,207 @@ const [isOpen, setIsOpen] = useState(false);
 
       {/* About us */}
       <section id="Aboutus" className="bg-white py-20 px-5 lg:px-20">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl font-bold text-blue-950">Who We Are</h1>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-            Learnsoft Beliotech Solutions is a forward-thinking tech company
-            revolutionizing how businesses operate through innovative digital
-            solutions.
-          </p>
-        </motion.div>
-
-        {/* Mission + Vision */}
-        <div className="grid md:grid-cols-2 gap-10 items-start mb-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
           <motion.div
-            initial={{ x: -80, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="bg-orange-50 p-6 rounded-lg shadow"
+            className="text-center mb-12"
           >
-            <h3 className="text-xl font-semibold text-orange-500 mb-2">
-              Our Mission
-            </h3>
-            <p className="text-gray-700 leading-relaxed">
-              To empower organizations of all sizes by delivering cutting-edge,
-              user-friendly digital products that streamline operations and
-              accelerate growth.
+            <h1 className="text-4xl font-bold text-blue-950">Who We Are</h1>
+            <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+              Learnsoft Beliotech Solutions is a forward-thinking tech company
+              revolutionizing how businesses operate through innovative digital
+              solutions.
             </p>
           </motion.div>
 
+          {/* Mission + Vision */}
+          <div className="grid md:grid-cols-2 gap-10 items-start mb-20">
+            <motion.div
+              initial={{ x: -80, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="bg-orange-50 p-6 rounded-lg shadow"
+            >
+              <h3 className="text-xl font-semibold text-orange-500 mb-2">
+                Our Mission
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                To empower organizations of all sizes by delivering cutting-edge,
+                user-friendly digital products that streamline operations and
+                accelerate growth.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ x: 80, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="bg-blue-50 p-6 rounded-lg shadow"
+            >
+              <h3 className="text-xl font-semibold text-blue-700 mb-2">
+                Our Vision
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                To become Africa’s leading software innovation hub by building
+                scalable and impactful digital ecosystems that shape the future.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Highlights */}
           <motion.div
-            initial={{ x: 80, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="bg-blue-50 p-6 rounded-lg shadow"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-center"
           >
-            <h3 className="text-xl font-semibold text-blue-700 mb-2">
-              Our Vision
-            </h3>
-            <p className="text-gray-700 leading-relaxed">
-              To become Africa’s leading software innovation hub by building
-              scalable and impactful digital ecosystems that shape the future.
-            </p>
+            {[
+              { title: "10+", subtitle: "Years of Experience" },
+              { title: "500+", subtitle: "Clients Served" },
+              { title: "20+", subtitle: "Enterprise Solutions" },
+              { title: "100%", subtitle: "Customer Satisfaction" },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="p-6 bg-gray-100 rounded-lg shadow hover:shadow-md transition"
+              >
+                <h4 className="text-3xl font-bold text-blue-950">{item.title}</h4>
+                <p className="text-gray-600 mt-2">{item.subtitle}</p>
+              </div>
+            ))}
           </motion.div>
         </div>
-
-        {/* Highlights */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-center"
-        >
-          {[
-            { title: "10+", subtitle: "Years of Experience" },
-            { title: "500+", subtitle: "Clients Served" },
-            { title: "20+", subtitle: "Enterprise Solutions" },
-            { title: "100%", subtitle: "Customer Satisfaction" },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="p-6 bg-gray-100 rounded-lg shadow hover:shadow-md transition"
-            >
-              <h4 className="text-3xl font-bold text-blue-950">{item.title}</h4>
-              <p className="text-gray-600 mt-2">{item.subtitle}</p>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+      </section>
 
       {/* contaact Us */}
-       <a
-      href={whatsappURL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed bottom-10 right-10 z-50 bg-orange-500 text-white rounded-full p-4 shadow-lg hover:bg-orange-600  transition  animate-pulse"
-    >
-       <motion.svg
-       whileTap={{ scale: 0.8 }}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="w-6 h-6 md:w-8 md:h-8"
+      <a
+        href={whatsappURL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-10 right-10 z-50 bg-orange-500 text-white rounded-full p-4 shadow-lg hover:bg-orange-600  transition  animate-pulse"
       >
-        <path d="M12.04 2.01A10 10 0 0 0 2 12.06a9.84 9.84 0 0 0 1.37 5.09L2 22l5.07-1.33a9.95 9.95 0 0 0 4.96 1.28H12A10 10 0 0 0 12.04 2zM12 20.08a8.07 8.07 0 0 1-4.1-1.13l-.3-.17-3.02.79.8-2.94-.2-.31a8.04 8.04 0 1 1 14.9-4.27 8.03 8.03 0 0 1-8.08 8.03zm4.62-6.03c-.26-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.66.83-.81 1-.3.2-.56.07a6.6 6.6 0 0 1-1.94-1.2 7.4 7.4 0 0 1-1.37-1.7c-.14-.26 0-.4.12-.53.12-.13.26-.3.4-.45.14-.15.2-.26.3-.43a.5.5 0 0 0-.02-.48c-.07-.14-.57-1.37-.78-1.87s-.4-.42-.56-.43h-.48a.92.92 0 0 0-.67.31 2.78 2.78 0 0 0-.86 2.06c0 1.22.87 2.4 1 2.57.13.17 1.7 2.6 4.13 3.64.58.25 1.04.4 1.4.51a3.35 3.35 0 0 0 1.56.1 2.66 2.66 0 0 0 1.75-1.22c.22-.3.22-.54.16-.74s-.24-.17-.5-.3z" />
-      </motion.svg>
-    </a>
-    {/* contact Us */}
-    <section id="contact" className="bg-white py-20 px-5 lg:px-20">
-            {/* Main Section Title */}
-            <div className="text-center mb-16">
-                <h1 className="text-5xl font-bold text-blue-950 mb-3">Contact Learnsoft</h1>
-                <p className="text-gray-600 text-lg">
-                    Have a question, proposal, or want to work with us? Reach out — we're here to help!
-                </p>
+        <motion.svg
+          whileTap={{ scale: 0.8 }}
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          className="w-6 h-6 md:w-8 md:h-8"
+        >
+          <path d="M12.04 2.01A10 10 0 0 0 2 12.06a9.84 9.84 0 0 0 1.37 5.09L2 22l5.07-1.33a9.95 9.95 0 0 0 4.96 1.28H12A10 10 0 0 0 12.04 2zM12 20.08a8.07 8.07 0 0 1-4.1-1.13l-.3-.17-3.02.79.8-2.94-.2-.31a8.04 8.04 0 1 1 14.9-4.27 8.03 8.03 0 0 1-8.08 8.03zm4.62-6.03c-.26-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.66.83-.81 1-.3.2-.56.07a6.6 6.6 0 0 1-1.94-1.2 7.4 7.4 0 0 1-1.37-1.7c-.14-.26 0-.4.12-.53.12-.13.26-.3.4-.45.14-.15.2-.26.3-.43a.5.5 0 0 0-.02-.48c-.07-.14-.57-1.37-.78-1.87s-.4-.42-.56-.43h-.48a.92.92 0 0 0-.67.31 2.78 2.78 0 0 0-.86 2.06c0 1.22.87 2.4 1 2.57.13.17 1.7 2.6 4.13 3.64.58.25 1.04.4 1.4.51a3.35 3.35 0 0 0 1.56.1 2.66 2.66 0 0 0 1.75-1.22c.22-.3.22-.54.16-.74s-.24-.17-.5-.3z" />
+        </motion.svg>
+      </a>
+      {/* contact Us */}
+      <section id="contact" className="bg-white py-20 px-5 lg:px-20">
+        {/* Main Section Title */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-blue-950 mb-3">Contact Learnsoft</h1>
+          <p className="text-gray-600 text-lg">
+            Have a question, proposal, or want to work with us? Reach out — we're here to help!
+          </p>
+        </div>
+
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+          {/* Contact Info */}
+          <motion.div
+            initial={{ x: -60, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl font-bold text-blue-950 mb-6">Get in Touch</h2>
+            <p className="text-gray-600 mb-6">
+              Let’s talk! Fill out the form or reach us directly — we’re here to support your digital transformation journey.
+            </p>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <FaMapMarkerAlt className="text-orange-500 text-xl mt-1" />
+                <p>123 Smart Avenue, Nairobi, Kenya</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaPhoneAlt className="text-orange-500 text-xl mt-1" />
+                <p>+254 700 000 000</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaEnvelope className="text-orange-500 text-xl mt-1" />
+                <p>info@learnsoft.co.ke</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Contact Form */}
+          <motion.form
+            initial={{ x: 60, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="bg-gray-50 p-8 rounded-lg shadow-lg space-y-6"
+          >
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Your name"
+                required
+              />
             </div>
 
-            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
-                {/* Contact Info */}
-                <motion.div
-                    initial={{ x: -60, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <h2 className="text-3xl font-bold text-blue-950 mb-6">Get in Touch</h2>
-                    <p className="text-gray-600 mb-6">
-                        Let’s talk! Fill out the form or reach us directly — we’re here to support your digital transformation journey.
-                    </p>
-
-                    <div className="space-y-4">
-                        <div className="flex items-start gap-4">
-                            <FaMapMarkerAlt className="text-orange-500 text-xl mt-1" />
-                            <p>123 Smart Avenue, Nairobi, Kenya</p>
-                        </div>
-                        <div className="flex items-start gap-4">
-                            <FaPhoneAlt className="text-orange-500 text-xl mt-1" />
-                            <p>+254 700 000 000</p>
-                        </div>
-                        <div className="flex items-start gap-4">
-                            <FaEnvelope className="text-orange-500 text-xl mt-1" />
-                            <p>info@learnsoft.co.ke</p>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Contact Form */}
-                <motion.form
-                    initial={{ x: 60, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                    className="bg-gray-50 p-8 rounded-lg shadow-lg space-y-6"
-                >
-                    <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            placeholder="Your name"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            placeholder="you@example.com"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                            Message
-                        </label>
-                        <textarea
-                            rows={5}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            placeholder="Your message"
-                            required
-                        ></textarea>
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition"
-                    >
-                        Send Message
-                    </button>
-                </motion.form>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                type="email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="you@example.com"
+                required
+              />
             </div>
 
-            {/* Google Map */}
-            <div className="mt-20 rounded-lg overflow-hidden shadow-lg">
-                <iframe
-                    title="Learnsoft Location"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
-                    width="100%"
-                    height="300"
-                    allowFullScreen={true}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">
+                Message
+              </label>
+              <textarea
+                rows={5}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Your message"
+                required
+              ></textarea>
             </div>
-        </section>
+
+            <button
+              type="submit"
+              className="bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition"
+            >
+              Send Message
+            </button>
+          </motion.form>
+        </div>
+
+        {/* Google Map */}
+        <div className="mt-20 rounded-lg overflow-hidden shadow-lg">
+          <iframe
+            title="Learnsoft Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
+            width="100%"
+            height="300"
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
 
 
       {/* footer*/}
-      
+
       <footer className='justify-between flex mx-auto  bg-blue-950 w-full'>
-        <hr className='max-w-7xl mx-auto my-5 text-gray-400'/>
+        <hr className='max-w-7xl mx-auto my-5 text-gray-400' />
         <p className=' text-[8px] md:text-sm text-start font-extralight max-w-6xl  text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
         <div>
           <a href="" className='text-gray-400'>FAQ's</a>
