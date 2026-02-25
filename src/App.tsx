@@ -8,7 +8,7 @@ import background from '/AutomationBg.png'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 // import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 //menu
 
@@ -89,14 +89,14 @@ const products = [
 
 function App() {
   //fetching content from our backend that gets data from the admin portal
-  const [ setContent] = useState({ h1: "", p: "" });
+  // const [ setContent] = useState({ h1: "", p: "" });
 
-  useEffect(() => {
-    fetch("http://localhost:8000/content")
-      .then((res) => res.json())
-      .then((data) => setContent(data))
-      .catch((err) => console.error("Failed to load content:", err));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/content")
+  //     .then((res) => res.json())
+  //     .then((data) => setContent(data))
+  //     .catch((err) => console.error("Failed to load content:", err));
+  // }, []);
 
   const [isOpen, setIsOpen] = useState(false);
 
