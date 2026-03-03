@@ -8,7 +8,7 @@ import background from '/AutomationBg.png'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 // import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
 import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
-import {useState } from "react";
+import { useState } from "react";
 
 //menu
 
@@ -27,27 +27,27 @@ const navLinks = [
 const services = [
   {
     title: "Mobile App Development",
-    icon: <FaMobileAlt className="text-4xl text-orange-500 animate-bounce" />,
+    icon: <FaMobileAlt className="text-4xl text-blue-500 animate-bounce" />,
     description:
       "Custom mobile applications tailored for both Android and iOS platforms.",
   },
   {
     title: "Web App Development",
     icon: (
-      <FaLaptopCode className="text-4xl text-orange-500 animate-spin-slow" />
+      <FaLaptopCode className="text-4xl text-blue-500 animate-spin-slow" />
     ),
     description:
       "Responsive and scalable web platforms using the latest tech stacks.",
   },
   {
     title: "Cloud Services",
-    icon: <FaCloud className="text-4xl text-orange-500 animate-pulse" />,
+    icon: <FaCloud className="text-4xl text-blue-500 animate-pulse" />,
     description:
       "Secure cloud infrastructure setup and management for modern scalability.",
   },
   {
     title: "IT Consulting",
-    icon: <FaCogs className="text-4xl text-orange-500 animate-wiggle" />,
+    icon: <FaCogs className="text-4xl text-blue-500 animate-wiggle" />,
     description:
       "Professional advisory for transforming and optimizing your tech operations.",
   },
@@ -121,8 +121,11 @@ function App() {
   return (
     <>
       {/* ✅ Sticky Menu Bar */}
-      <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-md">
-        <div className="px-5 md:px-20 py-4 flex justify-between items-center">
+      <section className="h-fit bg-[linear-gradient(60deg,#3b82f6_50%,#FF9800_50%)] text-white">
+        <a href='mailto:kmongare4@gmail.com' className='px-4' >Email : support@mksolutions.com</a>
+      </section>
+      <header className="sticky top-0 z-50 w-full bg-white backdrop-blur-md shadow-md">
+        <div className="px-5 md:px-20 py-2 flex justify-between items-center">
           <a href="#home" aria-label="Homepage">
             <img src={Logo} alt="" className='h-15' />
 
@@ -138,7 +141,7 @@ function App() {
               <li key={href}>
                 <a
                   href={href}
-                  className="text-sm md:text-4sm text-gray-800 hover:text-[var(--primary)] focus:text-[var(--secondary)]"
+                  className="text-lg font-bold  md:text-4sm text-gray-900 hover:text-blue-600 focus:text-blue-500"
                 >
                   {label}
                 </a>
@@ -175,41 +178,76 @@ function App() {
       <motion.section
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
-        className="relative w-full h-full md:h-[80vh] hero-bg px-5 items-center justify-center">
+        className="relative w-full h-full md:h-[95vh] hero-bg items-center justify-center">
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-85% to-blue-600/30"></div>
+
+
+
 
         {/* Hero Content */}
-        <div className="relative z-10 h-[80vh] md:px-20 grid md:flex  text-white justify-between items-center lg:px-20 px-4">
-          <div className='text-start'>
-            <div className="relative z-10 items-center fade-in">
-              <p className="shadow-md bg-black w-fit px-5 text-[var(--primary-color)] my-8 py-2 rounded-full text-start">
-                <span className="text-blue-600">✧</span> AI-Powered Business Solutions
+        <div className="relative z-10 h-[95vh] bg-black/20 md:px-20 grid md:flex  text-white justify-between items-center ">
+          <div className='text-center mx-auto '>
+            <div className="relative z-10 items-center fade-in ">
+              <p className="shadow-md bg-black w-fit px-5 text-[var(--primary-color)] my-8 py-2 rounded-full text-start mx-auto">
+                <span className="text-blue-600">✧</span> AI-Powered & Software Business Solutions
               </p>
-              <h1 className="font-extrabold bg-clip-text text-transparent bg-linear-to-l from-white to-100% to-gray-500  md:text-6xl text-4xl font-stretch-110%">
-                We Buy You Time <span className="text-gray-100 md:text-6xl text-4xl font-stretch-100%"><br />You Focus On<br />Making More Money</span>
+              <h1 className="font-extrabold bg-clip-text  bg-linear-to-l from-white to-100% to-gray-500  md:text-7xl text-4xl font-stretch-110%">
+                We Craft Digital Experiences That Elevate Brands
               </h1>
+              <p className='text-gray-300 font-light mt-5 md:w-2xl text-center mx-auto '>
+                We are a the first Software automation company focused on helping you solve your repetitive tasks and save you time.
+              </p>
 
               <div className="space-x-4 py-8">
-                <button className="bg-gradient-to-l shadow shadow-white from-black/50 to-200% to-blue-500  px-4 py-4 rounded-md text-[var(--primary-color)]">Book A Free Consultation</button>
+                <a href='' className="underline px-4 py-4 rounded-md text-[var(--primary-color)]">Book A Free Consultation</a>
 
               </div>
             </div>
           </div>
 
 
-          <div className='items-center shadow-2xl shadow-blue-700'>
-            <img src={background} alt="" className='h-110' />
-          </div>
+          {/* <div className='items-center shadow-2xl shadow-blue-700 rounded-lg z-10'>
+            <img src={background} alt="" className='h-110 rounded-lg' />
+          </div> */}
         </div>
       </motion.section>
 
+      {/* services */}
+      <section
+        id="services"
+        className="bg-gradient-to-t from-blue-400 via-95% to-white py-10 px-5 lg:px-20"
+      >
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 justify-center gap-5 max-w-7xl mx-auto">
+          {services.map((service, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.15, duration: 0.5 }}
+              className="bg-white -mt-30 rounded-sm p-6 w-62 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 z-30"
+            >
+              <div className="mb-4 flex justify-center">{service.icon}</div>
+              <h3 className="text-lg font-bold text-black mb-2 text-center">
+                {service.title}
+              </h3>
+              <p className="text-gray-600 text-sm text-center font-extralight">
+                {service.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+        <h2 className="text-4xl font-bold text-center text-black mb-16  py-2 px-2">
+          Our Services
+        </h2>
+      </section>
       {/* overview section */}
 
       <section id="Overview" className="w-full bg-white">
         {/* Section 1: What is ERP */}
         <div className="max-w-7xl mx-auto py-20 px-4 lg:px-20">
-          <h1 className="text-4xl font-bold text-black mb-6">
+          <h1 className="text-4xl font-bold text-gray-600 mb-6 text-center py-4">
             What is A.I Agent?
           </h1>
           <div className='justify-between md:flex grid'>
@@ -241,34 +279,7 @@ function App() {
       </section>
 
 
-      {/* services */}
-      <section
-        id="services"
-        className="bg-gradient-to-b from-gray-50 to-white py-20 px-5 lg:px-20"
-      >
-        <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
-          Our Services
-        </h2>
-        <div className="flex flex-wrap justify-center gap-10 max-w-7xl mx-auto">
-          {services.map((service, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.15, duration: 0.5 }}
-              className="bg-white rounded-xl p-6 w-72 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
-            >
-              <div className="mb-4 flex justify-center">{service.icon}</div>
-              <h3 className="text-lg font-bold text-blue-900 mb-2 text-center">
-                {service.title}
-              </h3>
-              <p className="text-gray-600 text-sm text-center">
-                {service.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+
       {/* products */}
       <section id="products" className="bg-white py-20 px-5 lg:px-20">
         <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
