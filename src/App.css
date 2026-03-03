@@ -1,6 +1,6 @@
 @import "tailwindcss";
 .hero-bg {
-  background-image: url('./assets/FB_IMG_1748079511841.jpg');
+  background-image: url('./assets/hero.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
