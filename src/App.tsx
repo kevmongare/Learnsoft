@@ -15,7 +15,7 @@ import { useState } from "react";
 const navLinks = [
   { href: '#', label: 'Home' },
   { href: '#Overview', label: 'Overview' },
-  { href: '#', label: 'Products' },
+  { href: '#products', label: 'Products' },
   { href: '#services', label: 'Services' },
   { href: '#Aboutus', label: 'About Us' },
   { href: '#contact', label: 'Contact Us' },
@@ -216,7 +216,7 @@ function App() {
       {/* services */}
       <section
         id="services"
-        className="bg-gradient-to-t from-blue-400 via-95% to-white py-10 px-5 lg:px-20"
+        className="scroll-mt-54 bg-gradient-to-t from-blue-400 via-95% to-white py-10 px-5 lg:px-20"
       >
         
         <div className="grid grid-cols-2 md:grid-cols-4 justify-center gap-5 max-w-7xl mx-auto">
@@ -238,13 +238,13 @@ function App() {
             </motion.div>
           ))}
         </div>
-        <h2 className="text-4xl font-bold text-center text-black mb-16  py-2 px-2">
+        {/* <h2 className="text-4xl font-bold text-center text-black mb-16  py-2 px-2">
           Our Services
-        </h2>
+        </h2> */}
       </section>
       {/* overview section */}
 
-      <section id="Overview" className="w-full bg-white">
+      <section id="Overview" className="w-full bg-white scroll-mt-15">
         {/* Section 1: What is ERP */}
         <div className="max-w-7xl mx-auto py-20 px-4 lg:px-20">
           <h1 className="text-4xl font-bold text-gray-600 mb-6 text-center py-4">
@@ -266,7 +266,7 @@ function App() {
         </div>
 
         {/* Section 2: Why You Need ERP */}
-        <div className="max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-50 shadow-md">
+        <div id='' className="scroll-mt-24 max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-50 shadow-md">
           <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
             Why Your Business Needs ERP
           </h2>
@@ -281,7 +281,7 @@ function App() {
 
 
       {/* products */}
-      <section id="products" className="bg-white py-20 px-5 lg:px-20">
+      <section id="products" className="bg-white py-20 px-5 lg:px-20 scroll-mt-20">
         <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
           Our Products
         </h2>
