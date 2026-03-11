@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, CSSProperties, ReactNode } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 /* ── Google Fonts ── */
 const fontLink = document.createElement("link");
