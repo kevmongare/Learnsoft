@@ -150,7 +150,7 @@ function Navbar() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-400"
+        className="sticky top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-400"
         style={scrolled
           ? { background: "rgba(8,8,16,.96)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,.07)", boxShadow: "0 4px 40px rgba(0,0,0,.5)" }
           : { background: "transparent" }
