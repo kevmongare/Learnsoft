@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
    IMAGES
 ───────────────────────────────────────── */
 const IMG = {
-  logo:      "/logo.png",   // ← place your logo in /public/logo.png
+  logo:      "/PrimeEdge_AI_Logo-removebg-preview.png",   // ← place your logo in /public/logo.png
   hero:      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1800&q=85&auto=format&fit=crop",
   ai:        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80&auto=format&fit=crop",
   training:  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80&auto=format&fit=crop",
@@ -107,27 +107,37 @@ function Kicker({ children }: { children: ReactNode }) {
 }
 
 /* ─────────────────────────────────────────
-   NAVBAR  (includes topbar internally)
+   TOPBAR
+───────────────────────────────────────── */
+function Topbar() {
+  return (
+    <div className="bg-[#05050d] border-b border-white/[.06] px-12 py-2 flex flex-wrap justify-between items-center gap-2
+                    text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
+      <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">
+        Prime Edge AI
+      </span>
+      <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   NAVBAR
 ───────────────────────────────────────── */
 function Navbar() {
-  const [open, setOpen]         = useState(false);
-  const [wide, setWide]         = useState(window.innerWidth >= 900);
+  const [open, setOpen]       = useState(false);
+  const [wide, setWide]       = useState(window.innerWidth >= 900);
   const [scrolled, setScrolled] = useState(false);
-  const topbarRef               = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onResize = () => setWide(window.innerWidth >= 900);
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const h = topbarRef.current?.offsetHeight ?? 36;
-      setScrolled(window.scrollY > h);
-    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const links = [
@@ -139,18 +149,11 @@ function Navbar() {
 
   return (
     <>
-      {/* ── Topbar — scrolls away naturally ── */}
-      <div ref={topbarRef} className="bg-[#05050d] border-b border-white/[.06] px-12 py-2 flex flex-wrap justify-between items-center gap-2 text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
-        <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">Prime Edge AI</span>
-        <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
-      </div>
-
-      {/* ── Navbar — sticky: sits right below topbar, then sticks to top ── */}
       <nav
-        className="sticky top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-400"
         style={scrolled
-          ? { background: "rgba(8,8,16,.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,.07)", boxShadow: "0 4px 40px rgba(0,0,0,.5)" }
-          : { background: "rgba(8,8,16,.5)",  backdropFilter: "blur(12px)",  WebkitBackdropFilter: "blur(12px)" }
+          ? { background: "rgba(8,8,16,.96)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,.07)", boxShadow: "0 4px 40px rgba(0,0,0,.5)" }
+          : { background: "transparent" }
         }
       >
         {/* ── Logo ── */}
@@ -158,7 +161,7 @@ function Navbar() {
           <img
             src={IMG.logo}
             alt="Prime Edge AI"
-            className="h-10 w-auto object-contain"
+            className="h-20 w-auto object-contain"
             onError={(e) => {
               /* fallback text logo if image missing */
               const img = e.currentTarget as HTMLImageElement;
@@ -278,7 +281,7 @@ function Hero() {
       <div className="hero-glow absolute top-[-10%] right-[-5%] w-1/2 h-[70%] z-[1] pointer-events-none" />
 
       {/* Content */}
-      <div className="relative z-[2] w-full max-w-[1160px] mx-auto px-20 pt-24">
+      <div className="relative z-[2] w-full max-w-[1160px] mx-auto px-20 pt-[72px]">
 
         {/* Kicker */}
         <div className="flex items-center gap-4 mb-9">
@@ -781,6 +784,7 @@ export default function App() {
       className="font-sans-pe text-[#F0F0F8] antialiased overflow-x-hidden"
       style={{ backgroundColor: "#080810", color: "#F0F0F8", minHeight: "100vh" }}
     >
+      <Topbar />
       <Navbar />
       <Hero />
       <Services />
