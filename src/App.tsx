@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
    IMAGES
 ───────────────────────────────────────── */
 const IMG = {
-  logo:      "/logo.png",   // ← place your logo in /public/logo.png
+  logo:      "/PrimeEdge_AI_Logo-removebg-preview.png",   // ← place your logo in /public/logo.png
   hero:      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1800&q=85&auto=format&fit=crop",
   ai:        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80&auto=format&fit=crop",
   training:  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80&auto=format&fit=crop",
