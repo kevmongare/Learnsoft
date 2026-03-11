@@ -53,20 +53,9 @@ if (!document.head.querySelector("[data-pe-css]")) {
     .btn-accent:hover   { background: #4a6ef0 !important; box-shadow: 0 8px 32px rgba(107,140,255,.35); }
     .btn-outline:hover  { border-color: rgba(255,255,255,.4) !important; color: #F0F0F8 !important; }
     .nav-cta:hover { background: #6B8CFF !important; color: #fff !important; }
-
-    /* Navbar sticky transition */
-    .navbar-sticky {
-      background: rgba(8,8,16,.96) !important;
-      backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      box-shadow: 0 4px 40px rgba(0,0,0,.5);
-    }
-    .navbar-top {
-      background: transparent !important;
-      backdrop-filter: none;
-      border-bottom: none;
-      box-shadow: none;
-    }
+    /* Topbar slide-up when scrolled */
+    .topbar-hidden { transform: translateY(-100%); }
+    .topbar-transition { transition: transform 0.3s ease; }
   `;
   document.head.appendChild(style);
 }
@@ -121,40 +110,41 @@ function Kicker({ children }: { children: ReactNode }) {
 }
 
 /* ─────────────────────────────────────────
-   TOPBAR — always at top, NOT sticky
+   TOPBAR
+   — visible at top of page, scrolls away
 ───────────────────────────────────────── */
-function Topbar() {
+const TOPBAR_HEIGHT = 36; // px — keep in sync with the topbar's rendered height
+
+function Topbar({ scrolled }: { scrolled: boolean }) {
   return (
-    <div className="bg-[#05050d] border-b border-white/[.06] px-12 py-2 flex flex-wrap justify-between items-center gap-2
-                    text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
-      <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">
-        Prime Edge AI
-      </span>
-      <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
+    <div
+      className={`fixed top-0 left-0 right-0 z-[300] topbar-transition ${scrolled ? "topbar-hidden" : ""}`}
+      style={{ height: TOPBAR_HEIGHT }}
+    >
+      <div className="bg-[#05050d] border-b border-white/[.06] px-12 h-full flex flex-wrap justify-between items-center gap-2
+                      text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
+        <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">
+          Prime Edge AI
+        </span>
+        <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
+      </div>
     </div>
   );
 }
 
 /* ─────────────────────────────────────────
-   NAVBAR — sticky to top; gains frosted
-   glass style only after user scrolls
-   past the topbar (~36px)
+   NAVBAR
+   — sits below topbar initially, sticks to
+     the very top once topbar scrolls away
 ───────────────────────────────────────── */
-function Navbar() {
-  const [open, setOpen]     = useState(false);
-  const [wide, setWide]     = useState(window.innerWidth >= 900);
-  const [stuck, setStuck]   = useState(false);   // true once topbar scrolled out of view
+function Navbar({ scrolled }: { scrolled: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [wide, setWide] = useState(window.innerWidth >= 900);
 
   useEffect(() => {
     const onResize = () => setWide(window.innerWidth >= 900);
-    // The topbar is roughly 36px tall. Once scrolled past it, apply frosted style.
-    const onScroll = () => setStuck(window.scrollY > 36);
     window.addEventListener("resize", onResize);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const links = [
@@ -164,14 +154,28 @@ function Navbar() {
     { label: "Contact",  href: "#contact" },
   ];
 
+  // When not yet scrolled: navbar sits just below the topbar
+  // When scrolled: topbar is gone, navbar is pinned at top:0
+  const navTop = scrolled ? 0 : TOPBAR_HEIGHT;
+
   return (
     <>
-      {/*
-        sticky top-0 means the navbar sticks to the viewport top as soon as
-        the topbar scrolls away. The visual style changes via `stuck` state.
-      */}
       <nav
-        className={`sticky top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-300 ${stuck ? "navbar-sticky" : "navbar-top"}`}
+        className="fixed left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between"
+        style={{
+          top: navTop,
+          transition: "top 0.3s ease, background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease",
+          ...(scrolled
+            ? {
+                background: "rgba(8,8,16,.96)",
+                backdropFilter: "blur(24px)",
+                borderBottom: "1px solid rgba(255,255,255,.07)",
+                boxShadow: "0 4px 40px rgba(0,0,0,.5)",
+              }
+            : {
+                background: "transparent",
+              }),
+        }}
       >
         {/* ── Logo ── */}
         <a href="#" className="flex items-center h-full py-3">
@@ -186,7 +190,6 @@ function Navbar() {
               if (fallback) fallback.style.display = "block";
             }}
           />
-          {/* Text fallback */}
           <span
             className="font-serif text-[1.3rem] font-light text-[#F0F0F8] tracking-[.04em]"
             style={{ display: "none" }}
@@ -246,9 +249,12 @@ function Navbar() {
       {/* ── Mobile drawer ── */}
       {open && !wide && (
         <div
-          className="fixed top-[108px] left-0 right-0 z-[199] bg-[#0e0e1a] border-b border-white/[.07]
-                     px-8 py-7 flex flex-col gap-1"
-          style={{ boxShadow: "0 24px 60px rgba(0,0,0,.6)" }}
+          className="fixed left-0 right-0 z-[199] bg-[#0e0e1a] border-b border-white/[.07] px-8 py-7 flex flex-col gap-1"
+          style={{
+            top: scrolled ? 72 : TOPBAR_HEIGHT + 72,
+            transition: "top 0.3s ease",
+            boxShadow: "0 24px 60px rgba(0,0,0,.6)",
+          }}
         >
           {links.map(l => (
             <a
@@ -296,8 +302,9 @@ function Hero() {
       <div className="hero-grad-b absolute bottom-0 left-0 right-0 h-[40%] z-[1]" />
       <div className="hero-glow absolute top-[-10%] right-[-5%] w-1/2 h-[70%] z-[1] pointer-events-none" />
 
-      {/* Content */}
-      <div className="relative z-[2] w-full max-w-[1160px] mx-auto px-20 pt-[72px]">
+      {/* Content — padded top to clear topbar + navbar */}
+      <div className="relative z-[2] w-full max-w-[1160px] mx-auto px-20"
+           style={{ paddingTop: `calc(${TOPBAR_HEIGHT}px + 72px + 48px)` }}>
 
         {/* Kicker */}
         <div className="flex items-center gap-4 mb-9">
@@ -308,10 +315,8 @@ function Hero() {
         </div>
 
         {/* Headline */}
-        <h1
-          className="font-serif font-light text-[#F0F0F8] leading-[1.02] tracking-[-0.01em] mb-2"
-          style={{ fontSize: "clamp(3.2rem, 7.5vw, 6.4rem)", maxWidth: 860 }}
-        >
+        <h1 className="font-serif font-light text-[#F0F0F8] leading-[1.02] tracking-[-0.01em] mb-2"
+            style={{ fontSize: "clamp(3.2rem, 7.5vw, 6.4rem)", maxWidth: 860 }}>
           Intelligence<br />
           That Drives<br />
           <em className="italic text-[#6B8CFF]">Real Results.</em>
@@ -321,10 +326,8 @@ function Hero() {
         <div className="w-14 h-px bg-[#C9A84C] opacity-60 my-7" />
 
         {/* Subtitle */}
-        <p
-          className="font-sans-pe font-light text-white/55 leading-[1.82] mb-[52px]"
-          style={{ fontSize: "1.02rem", maxWidth: 480 }}
-        >
+        <p className="font-sans-pe font-light text-white/55 leading-[1.82] mb-[52px]"
+           style={{ fontSize: "1.02rem", maxWidth: 480 }}>
           Prime Edge AI equips African businesses with cutting-edge AI, automation, and data
           solutions — engineered to cut costs, accelerate growth, and outpace the competition.
         </p>
@@ -350,22 +353,18 @@ function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="flex flex-wrap border-t border-white/[.07] pt-10">
+        <div className="flex flex-wrap border-t border-white/[.07] pt-10 pb-16">
           {stats.map(s => (
             <div
               key={s.num}
               className={`pb-2 ${s.last ? "" : "pr-12 mr-12 border-r border-white/[.07]"}`}
             >
-              <span
-                className="font-serif font-light text-[#F0F0F8] block leading-none mb-1.5"
-                style={{ fontSize: "2.6rem" }}
-              >
+              <span className="font-serif font-light text-[#F0F0F8] block leading-none mb-1.5"
+                    style={{ fontSize: "2.6rem" }}>
                 {s.num}
               </span>
-              <span
-                className="font-sans-pe font-normal text-white/28 tracking-[.14em] uppercase"
-                style={{ fontSize: ".66rem" }}
-              >
+              <span className="font-sans-pe font-normal text-white/28 tracking-[.14em] uppercase"
+                    style={{ fontSize: ".66rem" }}>
                 {s.label}
               </span>
             </div>
@@ -394,10 +393,8 @@ function Services() {
           <div className="flex flex-wrap justify-between items-end gap-6 mb-16">
             <div>
               <Kicker>What We Offer</Kicker>
-              <h2
-                className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em]"
-                style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}
-              >
+              <h2 className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em]"
+                  style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
                 Four disciplines.<br />
                 <em className="italic">One integrated edge.</em>
               </h2>
@@ -408,7 +405,6 @@ function Services() {
           </div>
         </Reveal>
 
-        {/* Card grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[.07] border border-white/[.07]">
           {SERVICES.map((svc, i) => (
             <Reveal key={svc.title} delay={i * 0.07}>
@@ -457,27 +453,18 @@ function About() {
           {/* Image */}
           <Reveal>
             <div className="relative overflow-hidden">
-              <img
-                src={IMG.about}
-                alt="Prime Edge AI team"
-                className="img-about w-full object-cover block"
-                style={{ height: 560 }}
-                loading="lazy"
-              />
-              <div
-                className="absolute bottom-0 left-0 right-0 h-[35%]"
-                style={{ background: "linear-gradient(to top, #0e0e1a 0%, transparent 100%)" }}
-              />
+              <img src={IMG.about} alt="Prime Edge AI team" className="img-about w-full object-cover block"
+                   style={{ height: 560 }} loading="lazy" />
+              <div className="absolute bottom-0 left-0 right-0 h-[35%]"
+                   style={{ background: "linear-gradient(to top, #0e0e1a 0%, transparent 100%)" }} />
             </div>
           </Reveal>
 
           {/* Copy */}
           <Reveal delay={0.1}>
             <Kicker>Who We Are</Kicker>
-            <h2
-              className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em] mb-4"
-              style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}
-            >
+            <h2 className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em] mb-4"
+                style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
               Africa's premier<br />
               <em className="italic">AI transformation partner</em>
             </h2>
@@ -505,12 +492,10 @@ function About() {
             </div>
 
             <div className="mt-11">
-              <a
-                href="#contact"
-                className="btn-accent bg-[#6B8CFF] text-white px-9 py-[15px] text-[.78rem] font-medium font-sans-pe
-                           tracking-[.1em] uppercase no-underline transition-all duration-200 inline-block"
-                style={{ borderRadius: "4px" }}
-              >
+              <a href="#contact"
+                 className="btn-accent bg-[#6B8CFF] text-white px-9 py-[15px] text-[.78rem] font-medium font-sans-pe
+                            tracking-[.1em] uppercase no-underline transition-all duration-200 inline-block"
+                 style={{ borderRadius: "4px" }}>
                 Work With Us
               </a>
             </div>
@@ -538,10 +523,8 @@ function Process() {
       <div className="max-w-[1160px] mx-auto">
         <Reveal>
           <Kicker>How We Work</Kicker>
-          <h2
-            className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em] mb-16"
-            style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}
-          >
+          <h2 className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em] mb-16"
+              style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
             From first call to<br />
             <em className="italic">full deployment — fast</em>
           </h2>
@@ -549,14 +532,10 @@ function Process() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-white/[.07] border border-white/[.07]">
           {STEPS.map(s => (
-            <div
-              key={s.n}
-              className="process-step bg-[#080810] p-8 transition-colors duration-200 cursor-default"
-            >
-              <div
-                className="font-serif font-light text-white/[.04] leading-none mb-5 select-none"
-                style={{ fontSize: "3.5rem", letterSpacing: "-0.03em" }}
-              >
+            <div key={s.n}
+                 className="process-step bg-[#080810] p-8 transition-colors duration-200 cursor-default">
+              <div className="font-serif font-light text-white/[.04] leading-none mb-5 select-none"
+                   style={{ fontSize: "3.5rem", letterSpacing: "-0.03em" }}>
                 {s.n}
               </div>
               <div className="font-sans-pe font-medium text-[#F0F0F8] text-[.86rem] tracking-[.03em] mb-2.5">
@@ -579,22 +558,14 @@ function Process() {
 function Divider() {
   return (
     <div className="relative overflow-hidden" style={{ height: 480 }}>
-      <img
-        src={IMG.divider}
-        alt=""
-        aria-hidden
-        className="img-divider absolute inset-0 w-full h-full object-cover object-[center_40%] z-0"
-      />
-      <div
-        className="absolute inset-0 z-[1]"
-        style={{ background: "linear-gradient(to right, rgba(8,8,16,.97) 0%, rgba(8,8,16,.4) 55%, transparent 100%)" }}
-      />
+      <img src={IMG.divider} alt="" aria-hidden
+           className="img-divider absolute inset-0 w-full h-full object-cover object-[center_40%] z-0" />
+      <div className="absolute inset-0 z-[1]"
+           style={{ background: "linear-gradient(to right, rgba(8,8,16,.97) 0%, rgba(8,8,16,.4) 55%, transparent 100%)" }} />
       <div className="absolute inset-0 z-[2] flex items-center px-20">
         <div>
-          <blockquote
-            className="font-serif font-light italic text-[#F0F0F8] leading-[1.32] tracking-[-0.01em]"
-            style={{ fontSize: "clamp(1.6rem,3.5vw,2.6rem)", maxWidth: 640 }}
-          >
+          <blockquote className="font-serif font-light italic text-[#F0F0F8] leading-[1.32] tracking-[-0.01em]"
+                      style={{ fontSize: "clamp(1.6rem,3.5vw,2.6rem)", maxWidth: 640 }}>
             "We don't just implement technology — we transform the way your organisation thinks, operates, and competes."
           </blockquote>
           <span className="block font-sans-pe font-medium text-[#C9A84C] text-[.66rem] tracking-[.16em] uppercase mt-6 not-italic">
@@ -648,10 +619,8 @@ function Contact() {
       <div className="max-w-[1160px] mx-auto">
         <Reveal>
           <Kicker>Get In Touch</Kicker>
-          <h2
-            className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em] mb-16"
-            style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}
-          >
+          <h2 className="font-serif font-light text-[#F0F0F8] leading-[1.15] tracking-[-0.01em] mb-16"
+              style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
             Ready to gain<br /><em className="italic">your edge?</em>
           </h2>
         </Reveal>
@@ -667,10 +636,8 @@ function Contact() {
             <div className="flex flex-col gap-7">
               {items.map(ci => (
                 <div key={ci.label} className="flex items-start gap-[18px]">
-                  <div
-                    className="w-9 h-9 border border-white/[.07] bg-[#080810] flex items-center justify-center flex-shrink-0"
-                    style={{ borderRadius: "4px" }}
-                  >
+                  <div className="w-9 h-9 border border-white/[.07] bg-[#080810] flex items-center justify-center flex-shrink-0"
+                       style={{ borderRadius: "4px" }}>
                     {ci.icon}
                   </div>
                   <div>
@@ -764,7 +731,6 @@ function Footer() {
   return (
     <footer className="bg-[#05050d] border-t border-white/[.06] px-12 pt-16 pb-8">
       <div className="max-w-[1160px] mx-auto">
-        {/* Top grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.8fr_1fr_1fr_1fr] gap-12 pb-14 mb-8 border-b border-white/[.06]">
           <div>
             <span className="block font-serif font-light text-[#F0F0F8] text-[1.5rem] tracking-[.02em] mb-4">
@@ -782,10 +748,8 @@ function Footer() {
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
                 {col.links.map(l => (
                   <li key={l}>
-                    <a
-                      href="#"
-                      className="footer-link font-sans-pe font-light text-white/28 text-[.82rem] no-underline transition-colors duration-200"
-                    >
+                    <a href="#"
+                       className="footer-link font-sans-pe font-light text-white/28 text-[.82rem] no-underline transition-colors duration-200">
                       {l}
                     </a>
                   </li>
@@ -795,7 +759,6 @@ function Footer() {
           ))}
         </div>
 
-        {/* Bottom row */}
         <div className="flex flex-wrap justify-between items-center gap-3">
           <p className="font-sans-pe font-light text-white/22 text-[.71rem] tracking-[.04em]">
             © 2025 Prime Edge AI Limited. All rights reserved.
@@ -831,15 +794,25 @@ function WhatsAppFloat() {
 
 /* ─────────────────────────────────────────
    APP ROOT
+   — single scroll listener drives both
+     Topbar (slides away) and Navbar (sticks)
 ───────────────────────────────────────── */
 export default function App() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > TOPBAR_HEIGHT);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div
       className="font-sans-pe text-[#F0F0F8] antialiased overflow-x-hidden"
       style={{ backgroundColor: "#080810", color: "#F0F0F8", minHeight: "100vh" }}
     >
-      <Topbar />
-      <Navbar />
+      <Topbar scrolled={scrolled} />
+      <Navbar scrolled={scrolled} />
       <Hero />
       <Services />
       <About />
