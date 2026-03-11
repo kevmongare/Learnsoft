@@ -2,48 +2,72 @@ import { useState, useEffect, useRef } from "react";
 import type { CSSProperties, ReactNode } from "react";
 
 /* ── Google Fonts ── */
-const fontLink = document.createElement("link");
-fontLink.href =
-  "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Satoshi:wght@300;400;500;700&display=swap";
-fontLink.rel = "stylesheet";
-if (!document.head.querySelector("link[data-mk-fonts]")) {
-  fontLink.setAttribute("data-mk-fonts", "true");
-  document.head.appendChild(fontLink);
+if (!document.head.querySelector("[data-pe-fonts]")) {
+  const l = document.createElement("link");
+  l.setAttribute("data-pe-fonts", "true");
+  l.rel = "stylesheet";
+  l.href = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap";
+  document.head.appendChild(l);
 }
 
-/* ── Images ── */
-const IMAGES = {
-  hero: "https://images.unsplash.com/photo-1677696795873-5006b3f95b44?w=1600&q=80&auto=format&fit=crop",
-  ai: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80&auto=format&fit=crop",
-  training: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80&auto=format&fit=crop",
-  web: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80&auto=format&fit=crop",
-  analytics: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format&fit=crop",
-  team: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=80&auto=format&fit=crop",
-  office: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80&auto=format&fit=crop",
+/* ── Design tokens ── */
+const T = {
+  bg:          "#080810",
+  surface:     "#0e0e1a",
+  surface2:    "#13131f",
+  border:      "rgba(255,255,255,0.07)",
+  accent:      "#6B8CFF",
+  accentDim:   "rgba(107,140,255,0.12)",
+  accentGlow:  "rgba(107,140,255,0.25)",
+  gold:        "#C9A84C",
+  text:        "#F0F0F8",
+  textMid:     "rgba(240,240,248,0.55)",
+  textDim:     "rgba(240,240,248,0.28)",
+  serif:       "'Cormorant Garamond', Georgia, serif",
+  sans:        "'Inter', system-ui, sans-serif",
+  radius:      "4px",
 };
 
-/* ── Typed style map ── */
-type StyleMap = Record<string, CSSProperties>;
+/* ── Images ── */
+const IMG = {
+  hero:      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1800&q=85&auto=format&fit=crop",
+  ai:        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80&auto=format&fit=crop",
+  training:  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80&auto=format&fit=crop",
+  web:       "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&q=80&auto=format&fit=crop",
+  analytics: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80&auto=format&fit=crop",
+  about:     "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80&auto=format&fit=crop",
+  divider:   "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1800&q=80&auto=format&fit=crop",
+};
 
-const S: StyleMap = {
+type SM = Record<string, CSSProperties>;
+
+const S: SM = {
   root: {
-    fontFamily: "'Satoshi', 'DM Sans', sans-serif",
-    color: "#0d0d12",
-    background: "#ffffff",
+    fontFamily: T.sans,
+    color: T.text,
+    background: T.bg,
     WebkitFontSmoothing: "antialiased",
     overflowX: "hidden",
   },
   topbar: {
-    background: "#0d0d12",
-    color: "rgba(255,255,255,0.55)",
-    fontSize: "0.75rem",
-    letterSpacing: "0.05em",
-    padding: "10px 40px",
+    background: "#05050d",
+    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    padding: "9px 48px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     flexWrap: "wrap",
     gap: 8,
+    fontSize: "0.72rem",
+    letterSpacing: "0.06em",
+    color: "rgba(240,240,248,0.28)",
+  },
+  topbarBrand: {
+    color: "#C9A84C",
+    fontWeight: 500,
+    letterSpacing: "0.1em",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "0.85rem",
   },
   nav: {
     position: "fixed",
@@ -51,36 +75,22 @@ const S: StyleMap = {
     left: 0,
     right: 0,
     zIndex: 200,
-    background: "rgba(255,255,255,0.0)",
-    backdropFilter: "blur(0px)",
-    WebkitBackdropFilter: "blur(0px)",
-    borderBottom: "1px solid transparent",
-    padding: "0 48px",
     height: 72,
+    padding: "0 48px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    transition: "background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
+    transition: "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
+    background: "transparent",
+    borderBottom: "1px solid transparent",
   },
   navScrolled: {
-    background: "rgba(255,255,255,0.96)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
-    borderBottom: "1px solid rgba(13,13,18,0.08)",
-    boxShadow: "0 2px 24px rgba(13,13,18,0.06)",
+    background: "rgba(8,8,16,0.96)",
+    backdropFilter: "blur(24px)",
+    WebkitBackdropFilter: "blur(24px)",
+    borderBottom: "1px solid rgba(255,255,255,0.07)",
+    boxShadow: "0 4px 40px rgba(0,0,0,0.5)",
   },
-  logo: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "1.45rem",
-    fontWeight: 400,
-    color: "#0d0d12",
-    textDecoration: "none",
-    letterSpacing: "-0.01em",
-    display: "flex",
-    alignItems: "center",
-    gap: 4,
-  },
-  logoAccent: { color: "#1246F6" },
   navLinks: {
     display: "flex",
     gap: 36,
@@ -90,46 +100,74 @@ const S: StyleMap = {
     alignItems: "center",
   },
   navLink: {
-    fontSize: "0.86rem",
-    fontWeight: 500,
-    color: "#3a3a4a",
+    fontSize: "0.78rem",
+    fontWeight: 400,
+    color: "rgba(240,240,248,0.55)",
     textDecoration: "none",
-    letterSpacing: "0.01em",
-    transition: "color 0.18s",
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    transition: "color 0.2s",
     cursor: "pointer",
   },
   navCta: {
-    background: "#0d0d12",
-    color: "#fff",
-    padding: "10px 24px",
-    borderRadius: 9,
-    fontSize: "0.84rem",
-    fontWeight: 600,
+    background: "transparent",
+    color: "#6B8CFF",
+    border: "1px solid #6B8CFF",
+    padding: "9px 24px",
+    borderRadius: "4px",
+    fontSize: "0.74rem",
+    fontWeight: 500,
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
     textDecoration: "none",
-    transition: "background 0.2s, transform 0.15s",
-    letterSpacing: "0.01em",
     cursor: "pointer",
-    border: "none",
+    transition: "background 0.2s, color 0.2s",
     display: "inline-block",
   },
+
+  /* Hero */
   hero: {
     position: "relative",
-    minHeight: "96vh",
+    minHeight: "100vh",
     display: "flex",
     alignItems: "center",
     overflow: "hidden",
+    background: "#080810",
   },
-  heroBg: {
+  heroImg: {
     position: "absolute",
     inset: 0,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    filter: "brightness(0.35)",
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "center 30%",
+    zIndex: 0,
+    filter: "saturate(0.4) brightness(0.2)",
   },
-  heroOverlay: {
+  heroGradL: {
     position: "absolute",
     inset: 0,
-    background: "linear-gradient(120deg, rgba(13,13,18,0.92) 40%, rgba(18,70,246,0.18) 100%)",
+    background: "linear-gradient(105deg, rgba(8,8,16,0.97) 38%, rgba(8,8,16,0.5) 65%, transparent 100%)",
+    zIndex: 1,
+  },
+  heroGradB: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "40%",
+    background: "linear-gradient(to top, rgba(8,8,16,1) 0%, transparent 100%)",
+    zIndex: 1,
+  },
+  heroGlow: {
+    position: "absolute",
+    top: "-10%",
+    right: "-5%",
+    width: "50%",
+    height: "70%",
+    background: "radial-gradient(ellipse, rgba(107,140,255,0.18) 0%, transparent 65%)",
+    zIndex: 1,
+    pointerEvents: "none",
   },
   heroContent: {
     position: "relative",
@@ -138,363 +176,452 @@ const S: StyleMap = {
     maxWidth: 1160,
     margin: "0 auto",
     width: "100%",
+    paddingTop: 72,
   },
-  heroEyebrow: {
-    display: "inline-flex",
+  heroKicker: {
+    display: "flex",
     alignItems: "center",
-    gap: 10,
-    background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    color: "rgba(255,255,255,0.7)",
-    fontSize: "0.72rem",
-    fontWeight: 600,
-    letterSpacing: "0.12em",
-    textTransform: "uppercase",
-    padding: "9px 18px",
-    borderRadius: 100,
-    marginBottom: 32,
+    gap: 14,
+    marginBottom: 36,
   },
-  heroDot: {
-    width: 6,
-    height: 6,
-    background: "#1246F6",
-    borderRadius: "50%",
+  heroKickerLine: {
+    width: 36,
+    height: 1,
+    background: "#C9A84C",
     display: "inline-block",
   },
+  heroKickerText: {
+    fontSize: "0.66rem",
+    fontWeight: 500,
+    letterSpacing: "0.22em",
+    textTransform: "uppercase",
+    color: "#C9A84C",
+  },
   heroH1: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "clamp(2.8rem, 6.5vw, 5.4rem)",
-    fontWeight: 400,
-    color: "#ffffff",
-    lineHeight: 1.05,
-    letterSpacing: "-0.025em",
-    marginBottom: 28,
-    maxWidth: 780,
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "clamp(3.2rem, 7.5vw, 6.4rem)",
+    fontWeight: 300,
+    color: "#F0F0F8",
+    lineHeight: 1.02,
+    letterSpacing: "-0.01em",
+    marginBottom: 8,
+    maxWidth: 860,
   },
   heroH1Em: {
     fontStyle: "italic",
-    color: "rgba(255,255,255,0.55)",
+    fontWeight: 300,
+    color: "#6B8CFF",
+  },
+  heroRule: {
+    width: 60,
+    height: 1,
+    background: "#C9A84C",
+    margin: "28px 0",
+    opacity: 0.6,
+    border: "none",
   },
   heroSub: {
-    fontSize: "1.05rem",
-    color: "rgba(255,255,255,0.55)",
-    lineHeight: 1.75,
-    maxWidth: 500,
+    fontSize: "1.02rem",
+    color: "rgba(240,240,248,0.55)",
+    lineHeight: 1.82,
+    maxWidth: 480,
     fontWeight: 300,
-    marginBottom: 48,
+    marginBottom: 52,
+    letterSpacing: "0.01em",
   },
   heroActions: {
     display: "flex",
-    gap: 14,
+    gap: 16,
     flexWrap: "wrap",
-    marginBottom: 80,
+    marginBottom: 96,
   },
-  btnPrimary: {
-    background: "#1246F6",
+  btnAccent: {
+    background: "#6B8CFF",
     color: "#fff",
-    padding: "15px 34px",
-    borderRadius: 10,
-    fontWeight: 600,
-    fontSize: "0.88rem",
+    padding: "15px 36px",
+    borderRadius: "4px",
+    fontWeight: 500,
+    fontSize: "0.78rem",
     textDecoration: "none",
-    letterSpacing: "0.02em",
-    transition: "background 0.2s, transform 0.15s, box-shadow 0.2s",
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    transition: "background 0.2s, box-shadow 0.2s",
     display: "inline-block",
     cursor: "pointer",
     border: "none",
   },
-  btnGhost: {
+  btnOutline: {
     background: "transparent",
-    color: "rgba(255,255,255,0.75)",
-    padding: "14px 32px",
-    borderRadius: 10,
-    fontWeight: 500,
-    fontSize: "0.88rem",
+    color: "rgba(240,240,248,0.55)",
+    padding: "14px 36px",
+    borderRadius: "4px",
+    fontWeight: 400,
+    fontSize: "0.78rem",
     textDecoration: "none",
-    border: "1.5px solid rgba(255,255,255,0.18)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
     transition: "border-color 0.2s, color 0.2s",
     display: "inline-block",
     cursor: "pointer",
   },
   heroStats: {
     display: "flex",
-    gap: 48,
+    gap: 0,
+    borderTop: "1px solid rgba(255,255,255,0.07)",
+    paddingTop: 40,
     flexWrap: "wrap",
   },
-  heroStat: { textAlign: "left" },
+  heroStat: {
+    paddingRight: 48,
+    marginRight: 48,
+    borderRight: "1px solid rgba(255,255,255,0.07)",
+    paddingBottom: 8,
+  },
+  heroStatLast: {
+    paddingRight: 0,
+    marginRight: 0,
+    borderRight: "none",
+    paddingBottom: 8,
+  },
   heroStatNum: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "2.4rem",
-    color: "#fff",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "2.6rem",
+    fontWeight: 300,
+    color: "#F0F0F8",
     display: "block",
     lineHeight: 1,
-    marginBottom: 4,
-    fontWeight: 400,
+    marginBottom: 6,
+    letterSpacing: "-0.02em",
   },
   heroStatLabel: {
-    fontSize: "0.75rem",
-    color: "rgba(255,255,255,0.38)",
-    letterSpacing: "0.05em",
-    textTransform: "uppercase",
-  },
-  statLine: {
-    width: 1,
-    background: "rgba(255,255,255,0.1)",
-    alignSelf: "stretch",
-  },
-  section: { padding: "100px 48px" },
-  container: { maxWidth: 1160, margin: "0 auto" },
-  label: {
-    fontSize: "0.7rem",
-    fontWeight: 700,
+    fontSize: "0.66rem",
+    color: "rgba(240,240,248,0.28)",
     letterSpacing: "0.14em",
     textTransform: "uppercase",
-    color: "#1246F6",
-    marginBottom: 14,
+    fontWeight: 400,
+  },
+
+  /* Section commons */
+  section: { padding: "110px 48px" },
+  container: { maxWidth: 1160, margin: "0 auto" },
+  kicker: {
     display: "flex",
     alignItems: "center",
-    gap: 10,
+    gap: 12,
+    marginBottom: 18,
   },
-  labelLine: {
-    width: 22,
-    height: 2,
-    background: "#1246F6",
-    borderRadius: 2,
-    display: "inline-block",
+  kickerLine: { width: 24, height: 1, background: "#C9A84C", display: "inline-block" },
+  kickerText: {
+    fontSize: "0.66rem",
+    fontWeight: 500,
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    color: "#C9A84C",
   },
   sectionTitle: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "clamp(1.9rem, 3.8vw, 3rem)",
-    fontWeight: 400,
-    letterSpacing: "-0.02em",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "clamp(2rem, 4vw, 3.2rem)",
+    fontWeight: 300,
+    letterSpacing: "-0.01em",
     lineHeight: 1.15,
-    color: "#0d0d12",
+    color: "#F0F0F8",
     marginBottom: 16,
   },
   sectionBody: {
-    fontSize: "1rem",
-    color: "#6b6b7b",
-    lineHeight: 1.8,
+    fontSize: "0.93rem",
+    color: "rgba(240,240,248,0.55)",
+    lineHeight: 1.85,
     fontWeight: 300,
-    maxWidth: 520,
+    maxWidth: 480,
   },
+
+  /* Services */
   servicesGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: 24,
-    marginTop: 56,
+    gridTemplateColumns: "repeat(auto-fit, minmax(270px, 1fr))",
+    gap: 1,
+    background: "rgba(255,255,255,0.07)",
+    border: "1px solid rgba(255,255,255,0.07)",
+    marginTop: 64,
   },
   serviceCard: {
-    borderRadius: 16,
+    background: "#0e0e1a",
     overflow: "hidden",
-    border: "1px solid rgba(13,13,18,0.08)",
-    background: "#fff",
-    transition: "box-shadow 0.28s, transform 0.28s",
+    transition: "background 0.3s",
     cursor: "pointer",
+    borderRadius: 0,
   },
-  serviceImg: {
+  serviceCardImg: {
     width: "100%",
-    height: 220,
+    height: 200,
     objectFit: "cover",
     display: "block",
-    background: "#f0f0f4",
+    filter: "brightness(0.65) saturate(0.5)",
+    transition: "filter 0.4s, transform 0.5s",
   },
-  serviceBody: { padding: "28px 28px 32px" },
-  serviceTag: {
-    fontSize: "0.68rem",
-    fontWeight: 700,
-    letterSpacing: "0.12em",
+  serviceCardBody: { padding: "28px 32px 36px" },
+  serviceCardTag: {
+    fontSize: "0.6rem",
+    fontWeight: 500,
+    letterSpacing: "0.2em",
     textTransform: "uppercase",
-    color: "#1246F6",
+    color: "#C9A84C",
     marginBottom: 10,
     display: "block",
   },
-  serviceTitle: {
-    fontSize: "1.1rem",
-    fontWeight: 700,
-    color: "#0d0d12",
-    marginBottom: 10,
-    letterSpacing: "-0.01em",
+  serviceCardTitle: {
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "1.4rem",
+    fontWeight: 400,
+    color: "#F0F0F8",
+    marginBottom: 12,
+    lineHeight: 1.2,
   },
-  serviceDesc: { fontSize: "0.87rem", color: "#6b6b7b", lineHeight: 1.7 },
-  aboutSection: { padding: "100px 48px", background: "#f7f7fa" },
+  serviceCardDesc: {
+    fontSize: "0.83rem",
+    color: "rgba(240,240,248,0.5)",
+    lineHeight: 1.78,
+    fontWeight: 300,
+  },
+  serviceCardLink: {
+    display: "inline-block",
+    marginTop: 20,
+    fontSize: "0.68rem",
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    color: "#6B8CFF",
+    fontWeight: 500,
+  },
+
+  /* About */
+  aboutSection: { padding: "110px 48px", background: "#0e0e1a" },
   aboutGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: 80,
     alignItems: "center",
   },
+  aboutImgWrap: { position: "relative", overflow: "hidden" },
   aboutImg: {
     width: "100%",
-    height: 520,
+    height: 560,
     objectFit: "cover",
-    borderRadius: 16,
     display: "block",
+    filter: "brightness(0.65) saturate(0.5)",
+    borderRadius: 0,
+  },
+  aboutImgFade: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "35%",
+    background: "linear-gradient(to top, #0e0e1a 0%, transparent 100%)",
   },
   aboutPoints: {
     display: "flex",
     flexDirection: "column",
-    gap: 24,
-    marginTop: 40,
+    gap: 0,
+    marginTop: 44,
   },
-  aboutPoint: { display: "flex", gap: 20, alignItems: "flex-start" },
+  aboutPoint: {
+    display: "flex",
+    gap: 20,
+    alignItems: "flex-start",
+    paddingBottom: 28,
+    paddingTop: 28,
+    borderBottom: "1px solid rgba(255,255,255,0.07)",
+  },
   pointNum: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "1.1rem",
-    color: "#1246F6",
-    fontWeight: 400,
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "1.2rem",
+    fontWeight: 300,
+    color: "#C9A84C",
     minWidth: 28,
     lineHeight: 1.4,
+    fontStyle: "italic",
   },
-  pointText: { fontSize: "0.9rem", color: "#3a3a4a", lineHeight: 1.7 },
   pointTitle: {
-    fontWeight: 700,
-    color: "#0d0d12",
     display: "block",
-    marginBottom: 4,
-    fontSize: "0.92rem",
+    fontWeight: 500,
+    color: "#F0F0F8",
+    marginBottom: 5,
+    fontSize: "0.86rem",
+    letterSpacing: "0.02em",
   },
-  processSection: { padding: "100px 48px", background: "#0d0d12" },
+  pointBody: {
+    fontSize: "0.83rem",
+    color: "rgba(240,240,248,0.5)",
+    lineHeight: 1.78,
+    fontWeight: 300,
+  },
+
+  /* Process */
   processGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gridTemplateColumns: "repeat(5, 1fr)",
     gap: 1,
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.05)",
-    borderRadius: 16,
-    overflow: "hidden",
+    background: "rgba(255,255,255,0.07)",
+    border: "1px solid rgba(255,255,255,0.07)",
     marginTop: 64,
   },
   processStep: {
-    padding: "44px 36px",
-    background: "#0d0d12",
-    transition: "background 0.2s",
+    padding: "44px 32px",
+    background: "#080810",
+    transition: "background 0.25s",
+    borderRadius: 0,
   },
-  processStepNum: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "3rem",
-    color: "rgba(255,255,255,0.06)",
+  processNum: {
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "3.5rem",
+    fontWeight: 300,
+    color: "rgba(255,255,255,0.04)",
     lineHeight: 1,
-    marginBottom: 18,
-    fontWeight: 400,
+    marginBottom: 20,
+    letterSpacing: "-0.03em",
   },
-  processStepTitle: {
-    fontSize: "0.95rem",
-    fontWeight: 700,
-    color: "#fff",
+  processTitle: {
+    fontSize: "0.86rem",
+    fontWeight: 500,
+    color: "#F0F0F8",
     marginBottom: 10,
-    letterSpacing: "-0.01em",
+    letterSpacing: "0.03em",
   },
-  processStepDesc: {
-    fontSize: "0.82rem",
-    color: "rgba(255,255,255,0.38)",
-    lineHeight: 1.7,
+  processDesc: {
+    fontSize: "0.79rem",
+    color: "rgba(240,240,248,0.28)",
+    lineHeight: 1.78,
+    fontWeight: 300,
   },
-  dividerImg: {
-    width: "100%",
-    height: 420,
-    objectFit: "cover",
-    display: "block",
-    filter: "brightness(0.7)",
-  },
-  dividerOverlay: { position: "relative", overflow: "hidden" },
-  dividerText: {
+
+  /* Divider */
+  divider: { position: "relative", overflow: "hidden", height: 480 },
+  dividerBg: {
     position: "absolute",
-    bottom: 48,
-    left: 80,
-    right: 80,
-    color: "#fff",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "center 40%",
+    filter: "brightness(0.2) saturate(0.3)",
+    zIndex: 0,
+  },
+  dividerVeil: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(to right, rgba(8,8,16,0.97) 0%, rgba(8,8,16,0.4) 55%, transparent 100%)",
+    zIndex: 1,
+  },
+  dividerInner: {
+    position: "absolute",
+    inset: 0,
     zIndex: 2,
+    display: "flex",
+    alignItems: "center",
+    padding: "0 80px",
   },
   dividerQuote: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "clamp(1.4rem, 3vw, 2.2rem)",
-    fontWeight: 400,
-    lineHeight: 1.3,
-    letterSpacing: "-0.015em",
-    maxWidth: 640,
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "clamp(1.6rem, 3.5vw, 2.6rem)",
+    fontWeight: 300,
     fontStyle: "italic",
-    color: "rgba(255,255,255,0.9)",
+    color: "#F0F0F8",
+    lineHeight: 1.32,
+    maxWidth: 640,
+    letterSpacing: "-0.01em",
   },
-  dividerCaption: {
-    fontSize: "0.78rem",
-    color: "rgba(255,255,255,0.45)",
-    letterSpacing: "0.06em",
+  dividerSource: {
+    fontSize: "0.66rem",
+    letterSpacing: "0.16em",
     textTransform: "uppercase",
-    marginTop: 16,
+    color: "#C9A84C",
+    marginTop: 24,
+    display: "block",
+    fontStyle: "normal",
+    fontWeight: 500,
   },
+
+  /* Contact */
+  contactSection: { padding: "110px 48px", background: "#0e0e1a" },
   contactGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1.4fr",
+    gridTemplateColumns: "1fr 1.5fr",
     gap: 80,
     alignItems: "start",
   },
-  contactInfoBody: {
-    color: "#6b6b7b",
-    fontSize: "0.93rem",
-    lineHeight: 1.78,
-    marginBottom: 40,
+  contactBody: {
+    fontSize: "0.9rem",
+    color: "rgba(240,240,248,0.5)",
+    lineHeight: 1.88,
+    marginBottom: 44,
     fontWeight: 300,
   },
-  contactItems: { display: "flex", flexDirection: "column", gap: 24 },
-  contactItem: { display: "flex", alignItems: "flex-start", gap: 16 },
+  contactItems: { display: "flex", flexDirection: "column", gap: 28 },
+  contactItem: { display: "flex", alignItems: "flex-start", gap: 18 },
   ciIconBox: {
-    width: 42,
-    height: 42,
-    background: "#f0f0f5",
-    borderRadius: 10,
+    width: 36,
+    height: 36,
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: "4px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
+    background: "#080810",
   },
   ciLabel: {
-    fontSize: "0.68rem",
-    color: "#9b9baa",
-    letterSpacing: "0.07em",
+    fontSize: "0.6rem",
+    color: "rgba(240,240,248,0.28)",
+    letterSpacing: "0.14em",
     textTransform: "uppercase",
-    marginBottom: 3,
+    marginBottom: 4,
     display: "block",
+    fontWeight: 400,
   },
-  ciValue: { fontSize: "0.88rem", color: "#0d0d12", fontWeight: 500 },
+  ciValue: {
+    fontSize: "0.85rem",
+    color: "#F0F0F8",
+    fontWeight: 400,
+  },
   contactForm: {
-    background: "#f7f7fa",
-    border: "1px solid rgba(13,13,18,0.07)",
-    borderRadius: 18,
+    background: "#080810",
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: 0,
     padding: "48px 44px",
   },
-  formRow: { marginBottom: 20 },
+  formRow: { marginBottom: 22 },
   formLabel: {
     display: "block",
-    fontSize: "0.72rem",
-    fontWeight: 700,
-    color: "#6b6b7b",
-    letterSpacing: "0.08em",
+    fontSize: "0.6rem",
+    fontWeight: 500,
+    color: "rgba(240,240,248,0.28)",
+    letterSpacing: "0.16em",
     textTransform: "uppercase",
-    marginBottom: 8,
+    marginBottom: 9,
   },
   formInput: {
     width: "100%",
-    background: "#fff",
-    border: "1.5px solid rgba(13,13,18,0.08)",
-    borderRadius: 10,
+    background: "#13131f",
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: "4px",
     padding: "13px 16px",
-    fontFamily: "'Satoshi', sans-serif",
-    fontSize: "0.92rem",
-    color: "#0d0d12",
+    fontFamily: "'Inter', system-ui, sans-serif",
+    fontSize: "0.87rem",
+    color: "#F0F0F8",
     outline: "none",
     boxSizing: "border-box",
     transition: "border-color 0.2s",
   },
   formTextarea: {
     width: "100%",
-    background: "#fff",
-    border: "1.5px solid rgba(13,13,18,0.08)",
-    borderRadius: 10,
+    background: "#13131f",
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: "4px",
     padding: "13px 16px",
-    fontFamily: "'Satoshi', sans-serif",
-    fontSize: "0.92rem",
-    color: "#0d0d12",
+    fontFamily: "'Inter', system-ui, sans-serif",
+    fontSize: "0.87rem",
+    color: "#F0F0F8",
     outline: "none",
     resize: "vertical",
     minHeight: 120,
@@ -503,83 +630,91 @@ const S: StyleMap = {
   },
   formSelect: {
     width: "100%",
-    background: "#fff",
-    border: "1.5px solid rgba(13,13,18,0.08)",
-    borderRadius: 10,
+    background: "#13131f",
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: "4px",
     padding: "13px 16px",
-    fontFamily: "'Satoshi', sans-serif",
-    fontSize: "0.92rem",
-    color: "#0d0d12",
+    fontFamily: "'Inter', system-ui, sans-serif",
+    fontSize: "0.87rem",
+    color: "#F0F0F8",
     outline: "none",
     appearance: "none",
     boxSizing: "border-box",
   },
-  form2col: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 16,
-  },
+  form2col: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 },
   formSubmit: {
-    background: "#0d0d12",
+    background: "#6B8CFF",
     color: "#fff",
     border: "none",
     padding: "15px 36px",
-    borderRadius: 10,
-    fontFamily: "'Satoshi', sans-serif",
-    fontSize: "0.9rem",
-    fontWeight: 600,
+    borderRadius: "4px",
+    fontFamily: "'Inter', system-ui, sans-serif",
+    fontSize: "0.75rem",
+    fontWeight: 500,
     cursor: "pointer",
-    letterSpacing: "0.02em",
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
     width: "100%",
     marginTop: 8,
-    transition: "background 0.2s, transform 0.15s",
+    transition: "background 0.2s, box-shadow 0.2s",
   },
+
+  /* WhatsApp */
   waFloat: {
     position: "fixed",
     bottom: 28,
     right: 28,
-    zIndex: 200,
-    width: 52,
-    height: 52,
+    zIndex: 300,
+    width: 50,
+    height: 50,
     background: "#25D366",
-    borderRadius: "50%",
+    borderRadius: "4px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
-    cursor: "pointer",
+    boxShadow: "0 4px 24px rgba(37,211,102,0.35)",
     textDecoration: "none",
-    transition: "transform 0.2s",
+    transition: "transform 0.2s, box-shadow 0.2s",
   },
-  footer: { background: "#0d0d12", padding: "64px 48px 32px" },
+
+  /* Footer */
+  footer: {
+    background: "#05050d",
+    borderTop: "1px solid rgba(255,255,255,0.06)",
+    padding: "64px 48px 32px",
+  },
   footerTop: {
     display: "grid",
-    gridTemplateColumns: "1.6fr 1fr 1fr 1fr",
+    gridTemplateColumns: "1.8fr 1fr 1fr 1fr",
     gap: 48,
-    marginBottom: 48,
+    marginBottom: 56,
+    paddingBottom: 56,
+    borderBottom: "1px solid rgba(255,255,255,0.06)",
   },
   footerLogo: {
-    fontFamily: "'Instrument Serif', Georgia, serif",
-    fontSize: "1.3rem",
-    color: "#fff",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: "1.5rem",
+    fontWeight: 300,
+    color: "#F0F0F8",
     display: "block",
-    marginBottom: 14,
-    fontWeight: 400,
-    textDecoration: "none",
+    marginBottom: 16,
+    letterSpacing: "0.02em",
   },
-  footerBrandText: {
+  footerDesc: {
     fontSize: "0.82rem",
-    color: "rgba(255,255,255,0.3)",
-    lineHeight: 1.75,
-    maxWidth: 240,
+    color: "rgba(240,240,248,0.28)",
+    lineHeight: 1.82,
+    maxWidth: 260,
+    fontWeight: 300,
   },
-  footerColTitle: {
-    fontSize: "0.68rem",
-    fontWeight: 700,
-    letterSpacing: "0.12em",
+  footerColHead: {
+    fontSize: "0.6rem",
+    fontWeight: 500,
+    letterSpacing: "0.18em",
     textTransform: "uppercase",
-    color: "rgba(255,255,255,0.28)",
-    marginBottom: 18,
+    color: "#C9A84C",
+    marginBottom: 20,
+    display: "block",
   },
   footerList: {
     listStyle: "none",
@@ -587,90 +722,83 @@ const S: StyleMap = {
     margin: 0,
     display: "flex",
     flexDirection: "column",
-    gap: 10,
+    gap: 12,
   },
   footerLink: {
-    fontSize: "0.83rem",
-    color: "rgba(255,255,255,0.45)",
+    fontSize: "0.82rem",
+    color: "rgba(240,240,248,0.28)",
     textDecoration: "none",
+    fontWeight: 300,
     transition: "color 0.18s",
     cursor: "pointer",
   },
   footerBottom: {
-    borderTop: "1px solid rgba(255,255,255,0.06)",
-    paddingTop: 24,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     flexWrap: "wrap",
     gap: 12,
   },
-  footerCopy: { fontSize: "0.76rem", color: "rgba(255,255,255,0.22)" },
+  footerCopy: {
+    fontSize: "0.71rem",
+    color: "rgba(240,240,248,0.22)",
+    fontWeight: 300,
+    letterSpacing: "0.04em",
+  },
 };
 
-/* ── useScrollReveal ── */
-function useScrollReveal() {
+/* ── Reveal hook ── */
+function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [vis, setVis] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+      ([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } },
+      { threshold: 0.08, rootMargin: "0px 0px -32px 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
-  return [ref, visible] as const;
+  return [ref, vis] as const;
 }
 
-/* ── Reveal wrapper ── */
-function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
-  const [ref, visible] = useScrollReveal();
+function Reveal({ children, delay = 0, y = 24 }: { children: ReactNode; delay?: number; y?: number }) {
+  const [ref, vis] = useReveal();
   return (
-    <div
-      ref={ref}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.65s ease ${delay}s, transform 0.65s ease ${delay}s`,
-      }}
-    >
+    <div ref={ref} style={{
+      opacity: vis ? 1 : 0,
+      transform: vis ? "translateY(0)" : `translateY(${y}px)`,
+      transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
+    }}>
       {children}
     </div>
   );
 }
 
-/* ── SectionLabel ── */
-function SectionLabel({ children }: { children: ReactNode }) {
+function Kicker({ children }: { children: ReactNode }) {
   return (
-    <div style={S.label}>
-      <span style={S.labelLine} />
-      {children}
+    <div style={S.kicker}>
+      <span style={S.kickerLine} />
+      <span style={S.kickerText}>{children}</span>
     </div>
   );
 }
 
-/* ── Topbar ── */
+/* ══════════════════════════════════
+   COMPONENTS
+══════════════════════════════════ */
+
 function Topbar() {
   return (
     <div style={S.topbar}>
-      <span>info@mksolutions.co.ke</span>
-      <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
-      <span>+254 706 384 510</span>
-      <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
-      <span>Nairobi, Kenya</span>
+      <span style={S.topbarBrand}>Prime Edge AI</span>
+      <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
     </div>
   );
 }
 
-/* ── Navbar ── */
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [wide, setWide] = useState(window.innerWidth >= 900);
@@ -678,7 +806,7 @@ function Navbar() {
 
   useEffect(() => {
     const onResize = () => setWide(window.innerWidth >= 900);
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("resize", onResize);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -687,6 +815,7 @@ function Navbar() {
     };
   }, []);
 
+  const navStyle: CSSProperties = { ...S.nav, ...(scrolled ? S.navScrolled : {}) };
   const links = [
     { label: "Services", href: "#services" },
     { label: "About", href: "#about" },
@@ -694,32 +823,27 @@ function Navbar() {
     { label: "Contact", href: "#contact" },
   ];
 
-  // Over hero: white text / transparent nav. After scroll: dark text / frosted nav.
-  const navStyle: CSSProperties = {
-    ...S.nav,
-    ...(scrolled ? S.navScrolled : {}),
-  };
-
-  const linkColor = scrolled ? "#3a3a4a" : "rgba(255,255,255,0.85)";
-  const logoColor = scrolled ? "#0d0d12" : "#ffffff";
-  const hamburgerColor = scrolled ? "#0d0d12" : "#ffffff";
-
   return (
     <>
       <nav style={navStyle}>
-        <a href="#" style={{ ...S.logo, color: logoColor }}>
-          MK<span style={{ color: "#1246F6" }}>Solutions</span>
+        <a href="#" style={{
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontSize: "1.3rem",
+          fontWeight: 300,
+          color: "#F0F0F8",
+          textDecoration: "none",
+          letterSpacing: "0.04em",
+        }}>
+          Prime <em style={{ fontStyle: "italic", color: "#6B8CFF" }}>Edge</em> AI
         </a>
 
         {wide && (
           <ul style={S.navLinks}>
-            {links.map((l) => (
+            {links.map(l => (
               <li key={l.label}>
-                <a
-                  href={l.href}
-                  style={{ ...S.navLink, color: linkColor }}
-                  onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#1246F6"; }}
-                  onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = linkColor; }}
+                <a href={l.href} style={S.navLink}
+                  onMouseOver={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#F0F0F8"; }}
+                  onMouseOut={e => { (e.currentTarget as HTMLAnchorElement).style.color = "rgba(240,240,248,0.55)"; }}
                 >
                   {l.label}
                 </a>
@@ -729,36 +853,36 @@ function Navbar() {
         )}
 
         {wide && (
-          <a
-            href="#contact"
-            style={{
-              ...S.navCta,
-              background: scrolled ? "#0d0d12" : "rgba(255,255,255,0.12)",
-              border: scrolled ? "none" : "1.5px solid rgba(255,255,255,0.3)",
-              color: "#fff",
+          <a href="#contact" style={S.navCta}
+            onMouseOver={e => {
+              const el = e.currentTarget as HTMLAnchorElement;
+              el.style.background = "#6B8CFF";
+              el.style.color = "#fff";
             }}
-            onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#1246F6"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "#1246F6"; }}
-            onMouseOut={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = scrolled ? "#0d0d12" : "rgba(255,255,255,0.12)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = scrolled ? "transparent" : "rgba(255,255,255,0.3)";
+            onMouseOut={e => {
+              const el = e.currentTarget as HTMLAnchorElement;
+              el.style.background = "transparent";
+              el.style.color = "#6B8CFF";
             }}
           >
-            Book Consultation
+            Get Started
           </a>
         )}
 
         {!wide && (
-          <button
-            onClick={() => setOpen(!open)}
+          <button onClick={() => setOpen(!open)}
             style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
             aria-label="Toggle menu"
           >
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              {open ? (
-                <path d="M4 4L18 18M18 4L4 18" stroke={hamburgerColor} strokeWidth="1.8" strokeLinecap="round" />
-              ) : (
-                <path d="M3 6h16M3 11h16M3 16h16" stroke={hamburgerColor} strokeWidth="1.8" strokeLinecap="round" />
-              )}
+            <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+              {open
+                ? <path d="M2 2L20 16M20 2L2 16" stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
+                : <>
+                    <line x1="2" y1="2" x2="20" y2="2" stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="2" y1="9" x2="20" y2="9" stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="2" y1="16" x2="20" y2="16" stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
+                  </>
+              }
             </svg>
           </button>
         )}
@@ -767,99 +891,80 @@ function Navbar() {
       {open && !wide && (
         <div style={{
           position: "fixed", top: 72, left: 0, right: 0, zIndex: 199,
-          background: "#fff", borderBottom: "1px solid rgba(13,13,18,0.08)",
-          padding: "28px 32px 36px", display: "flex", flexDirection: "column", gap: 16,
-          boxShadow: "0 24px 48px rgba(0,0,0,0.08)",
+          background: "#0e0e1a", borderBottom: "1px solid rgba(255,255,255,0.07)",
+          padding: "28px 32px 36px", display: "flex", flexDirection: "column", gap: 4,
+          boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
         }}>
-          {links.map((l) => (
-            <a key={l.label} href={l.href} onClick={() => setOpen(false)}
-              style={{ fontSize: "1.05rem", color: "#0d0d12", textDecoration: "none", fontWeight: 500, padding: "10px 0", borderBottom: "1px solid rgba(13,13,18,0.06)" }}
-            >
-              {l.label}
-            </a>
+          {links.map(l => (
+            <a key={l.label} href={l.href} onClick={() => setOpen(false)} style={{
+              fontSize: "0.84rem", color: "rgba(240,240,248,0.6)", textDecoration: "none",
+              fontWeight: 400, padding: "13px 0", borderBottom: "1px solid rgba(255,255,255,0.07)",
+              letterSpacing: "0.1em", textTransform: "uppercase",
+            }}>{l.label}</a>
           ))}
           <a href="#contact" onClick={() => setOpen(false)}
-            style={{ ...S.navCta, textAlign: "center", marginTop: 8, display: "block" }}
-          >
-            Book Consultation
-          </a>
+            style={{ ...S.navCta, textAlign: "center", marginTop: 16, display: "block" }}
+          >Get Started</a>
         </div>
       )}
     </>
   );
 }
 
-/* ── Hero ── */
 function Hero() {
-  const stats: [string, string][] = [
-    ["500+", "Clients Served"],
-    ["10+", "Years Experience"],
-    ["20+", "Enterprise Solutions"],
-    ["100%", "Client Satisfaction"],
+  const stats: { num: string; label: string; last?: boolean }[] = [
+    { num: "500+", label: "Clients Served" },
+    { num: "10+",  label: "Years Experience" },
+    { num: "20+",  label: "AI Solutions Built" },
+    { num: "100%", label: "Satisfaction Rate", last: true },
   ];
 
   return (
     <section style={S.hero}>
-      {/* Full-bleed background image */}
-      <img
-        src={IMAGES.hero}
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          objectPosition: "center",
-          zIndex: 0,
-        }}
-      />
-      {/* Dark gradient overlay */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: "linear-gradient(120deg, rgba(8,8,14,0.88) 35%, rgba(18,70,246,0.22) 100%)",
-        zIndex: 1,
-      }} />
+      <img src={IMG.hero} alt="" aria-hidden="true" style={S.heroImg} />
+      <div style={S.heroGradL} />
+      <div style={S.heroGradB} />
+      <div style={S.heroGlow} />
 
-      {/* Content — sits above image and overlay */}
-      <div style={{ ...S.heroContent, zIndex: 2, paddingTop: 72 }}>
-        <div style={S.heroEyebrow}>
-          <span style={S.heroDot} />
-          AI-First Digital Transformation
+      <div style={S.heroContent}>
+        <div style={S.heroKicker}>
+          <span style={S.heroKickerLine} />
+          <span style={S.heroKickerText}>AI-Powered Business Transformation</span>
         </div>
+
         <h1 style={S.heroH1}>
-          Build Smarter.<br />
-          Automate Faster.<br />
-          <em style={S.heroH1Em}>Grow Further.</em>
+          Intelligence<br />
+          That Drives<br />
+          <em style={S.heroH1Em}>Real Results.</em>
         </h1>
+
+        <hr style={S.heroRule} />
+
         <p style={S.heroSub}>
-          MK Solutions helps African businesses harness the power of AI, automation, and data — delivering real results from day one.
+          Prime Edge AI equips African businesses with cutting-edge AI, automation, and data solutions — engineered to cut costs, accelerate growth, and outpace the competition.
         </p>
+
         <div style={S.heroActions}>
-          <a href="#contact" style={S.btnPrimary}
-            onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#0037d0"; }}
-            onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#1246F6"; }}
+          <a href="#contact" style={S.btnAccent}
+            onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = "#4a6ef0"; el.style.boxShadow = "0 8px 32px rgba(107,140,255,0.35)"; }}
+            onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = "#6B8CFF"; el.style.boxShadow = "none"; }}
           >
             Book a Free Consultation
           </a>
-          <a href="#services" style={S.btnGhost}
-            onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.5)"; (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; }}
-            onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.18)"; (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.75)"; }}
+          <a href="#services" style={S.btnOutline}
+            onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = "rgba(255,255,255,0.4)"; el.style.color = "#F0F0F8"; }}
+            onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = "rgba(255,255,255,0.18)"; el.style.color = "rgba(240,240,248,0.55)"; }}
           >
             Explore Services
           </a>
         </div>
+
         <div style={S.heroStats}>
-          {stats.map(([num, label], i) => (
-            <>
-              {i > 0 && <div key={`line-${i}`} style={S.statLine} />}
-              <div key={num} style={S.heroStat}>
-                <span style={S.heroStatNum}>{num}</span>
-                <span style={S.heroStatLabel}>{label}</span>
-              </div>
-            </>
+          {stats.map(s => (
+            <div key={s.num} style={s.last ? S.heroStatLast : S.heroStat}>
+              <span style={S.heroStatNum}>{s.num}</span>
+              <span style={S.heroStatLabel}>{s.label}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -867,51 +972,55 @@ function Hero() {
   );
 }
 
-/* ── Services ── */
 const SERVICES = [
-  { tag: "Artificial Intelligence", title: "AI & Automation", desc: "Deploy intelligent agents, automate repetitive workflows, and embed AI into your existing operations — saving hours every week.", img: IMAGES.ai },
-  { tag: "Training & Education", title: "AI Training", desc: "Hands-on workshops for teams and individuals — from AI fundamentals to advanced prompt engineering and enterprise tool adoption.", img: IMAGES.training },
-  { tag: "Digital Presence", title: "Website Creation", desc: "Fast, modern, conversion-focused websites and web applications — built for performance, SEO, and lasting brand credibility.", img: IMAGES.web },
-  { tag: "Intelligence", title: "Data Analytics", desc: "Transform raw data into clear business decisions — custom dashboards, forecasting models, and actionable reporting pipelines.", img: IMAGES.analytics },
+  { tag: "Artificial Intelligence", title: "AI & Automation",  desc: "Custom AI agents and workflow automation that eliminate repetitive tasks, reduce costs, and operate 24/7 without oversight.", img: IMG.ai },
+  { tag: "Training & Upskilling", title: "AI Training",        desc: "Practical workshops that transform your team from passive observers to confident AI operators — at every skill level.", img: IMG.training },
+  { tag: "Digital Presence",      title: "Website Creation",   desc: "Performance-first, visually striking web experiences built for conversion, credibility, and long-term brand authority.", img: IMG.web },
+  { tag: "Business Intelligence", title: "Data Analytics",     desc: "Transform fragmented data into unified intelligence — dashboards, forecasting models, and reports that drive decisions.", img: IMG.analytics },
 ];
 
 function Services() {
   return (
-    <section id="services" style={{ ...S.section, background: "#f7f7fa" }}>
+    <section id="services" style={{ ...S.section, background: T.bg }}>
       <div style={S.container}>
         <Reveal>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 56 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24 }}>
             <div>
-              <SectionLabel>Our Services</SectionLabel>
-              <h2 style={S.sectionTitle}>Everything your business<br />needs to scale</h2>
+              <Kicker>What We Offer</Kicker>
+              <h2 style={S.sectionTitle}>Four disciplines.<br /><em style={{ fontStyle: "italic" }}>One integrated edge.</em></h2>
             </div>
-            <p style={{ ...S.sectionBody, maxWidth: 380, marginTop: 0 }}>
-              From strategy to execution — full-stack digital solutions tailored to your goals and your market.
+            <p style={{ ...S.sectionBody, maxWidth: 340 }}>
+              Built for African businesses ready to move faster, operate smarter, and compete at a global level.
             </p>
           </div>
         </Reveal>
 
         <div style={S.servicesGrid}>
           {SERVICES.map((svc, i) => (
-            <Reveal key={svc.title} delay={i * 0.08}>
+            <Reveal key={svc.title} delay={i * 0.07}>
               <div
                 style={S.serviceCard}
-                onMouseOver={(e) => {
+                onMouseOver={e => {
                   const el = e.currentTarget as HTMLDivElement;
-                  el.style.boxShadow = "0 20px 56px rgba(13,13,18,0.1)";
-                  el.style.transform = "translateY(-5px)";
+                  el.style.background = "#13131f";
+                  const img = el.querySelector("img") as HTMLImageElement | null;
+                  if (img) { img.style.filter = "brightness(0.85) saturate(0.75)"; img.style.transform = "scale(1.04)"; }
                 }}
-                onMouseOut={(e) => {
+                onMouseOut={e => {
                   const el = e.currentTarget as HTMLDivElement;
-                  el.style.boxShadow = "";
-                  el.style.transform = "";
+                  el.style.background = "#0e0e1a";
+                  const img = el.querySelector("img") as HTMLImageElement | null;
+                  if (img) { img.style.filter = "brightness(0.65) saturate(0.5)"; img.style.transform = "scale(1)"; }
                 }}
               >
-                <img src={svc.img} alt={svc.title} style={S.serviceImg} loading="lazy" />
-                <div style={S.serviceBody}>
-                  <span style={S.serviceTag}>{svc.tag}</span>
-                  <div style={S.serviceTitle}>{svc.title}</div>
-                  <p style={S.serviceDesc}>{svc.desc}</p>
+                <div style={{ overflow: "hidden" }}>
+                  <img src={svc.img} alt={svc.title} style={S.serviceCardImg} loading="lazy" />
+                </div>
+                <div style={S.serviceCardBody}>
+                  <span style={S.serviceCardTag}>{svc.tag}</span>
+                  <div style={S.serviceCardTitle}>{svc.title}</div>
+                  <p style={S.serviceCardDesc}>{svc.desc}</p>
+                  <span style={S.serviceCardLink}>Learn more →</span>
                 </div>
               </div>
             </Reveal>
@@ -922,12 +1031,11 @@ function Services() {
   );
 }
 
-/* ── About ── */
 function About() {
   const points = [
-    { n: "01", title: "We start with your business goals", desc: "Not the technology. Every engagement begins with understanding your operations and where the leverage points are." },
-    { n: "02", title: "We deliver, then we train", desc: "Every solution is handed off with full team training — so adoption is guaranteed, not an afterthought." },
-    { n: "03", title: "We stay as your long-term partner", desc: "No disappearing post-launch. We monitor, optimise, and scale alongside your growth." },
+    { n: "01", title: "Goals before technology", body: "Every engagement starts with your operations — we build what you actually need, not what sounds impressive." },
+    { n: "02", title: "Deliver, then transfer knowledge", body: "We train your team on every solution — so results outlast our involvement and adoption is guaranteed." },
+    { n: "03", title: "Long-term partnership", body: "We monitor, optimise, and scale alongside you. We measure success by your growth, not just project delivery." },
   ];
 
   return (
@@ -935,29 +1043,32 @@ function About() {
       <div style={S.container}>
         <div style={S.aboutGrid}>
           <Reveal>
-            <img src={IMAGES.team} alt="MK Solutions team" style={S.aboutImg} loading="lazy" />
+            <div style={S.aboutImgWrap}>
+              <img src={IMG.about} alt="Prime Edge AI team" style={S.aboutImg} loading="lazy" />
+              <div style={S.aboutImgFade} />
+            </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <SectionLabel>Who We Are</SectionLabel>
-            <h2 style={S.sectionTitle}>Africa's trusted AI & digital transformation partner</h2>
+            <Kicker>Who We Are</Kicker>
+            <h2 style={S.sectionTitle}>Africa's premier<br /><em style={{ fontStyle: "italic" }}>AI transformation partner</em></h2>
             <p style={S.sectionBody}>
-              MK Solutions is a Nairobi-based technology firm helping organisations across Africa adopt AI, streamline operations, and build digital infrastructure that lasts.
+              Prime Edge AI is a Nairobi-based technology firm helping organisations across Africa adopt AI, automate operations, and build digital infrastructure that creates lasting competitive advantage.
             </p>
             <div style={S.aboutPoints}>
-              {points.map((p) => (
+              {points.map(p => (
                 <div key={p.n} style={S.aboutPoint}>
                   <span style={S.pointNum}>{p.n}</span>
                   <div>
                     <span style={S.pointTitle}>{p.title}</span>
-                    <span style={S.pointText}>{p.desc}</span>
+                    <span style={S.pointBody}>{p.body}</span>
                   </div>
                 </div>
               ))}
             </div>
             <div style={{ marginTop: 44 }}>
-              <a href="#contact" style={{ ...S.btnPrimary, textDecoration: "none" }}
-                onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#0037d0"; }}
-                onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#1246F6"; }}
+              <a href="#contact" style={S.btnAccent}
+                onMouseOver={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#4a6ef0"; }}
+                onMouseOut={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#6B8CFF"; }}
               >
                 Work With Us
               </a>
@@ -969,37 +1080,31 @@ function About() {
   );
 }
 
-/* ── Process ── */
 const STEPS = [
-  { n: "01", title: "Discovery Call", desc: "We learn your business, pain points, and goals. Free consultation — no strings attached." },
-  { n: "02", title: "Strategy & Scoping", desc: "Clear roadmap, deliverables, and timeline — transparent pricing, no surprises." },
-  { n: "03", title: "Build & Iterate", desc: "Agile delivery with weekly check-ins. You see progress continuously, not just at the end." },
-  { n: "04", title: "Launch & Train", desc: "We deploy, train your team, and ensure adoption — so results follow the rollout." },
-  { n: "05", title: "Ongoing Support", desc: "Monitoring, optimisation, and scaling. We're your long-term partner, not a one-off vendor." },
+  { n: "01", title: "Discovery",  desc: "Free consultation to understand your goals and where AI creates the most leverage for your business." },
+  { n: "02", title: "Strategy",   desc: "Clear roadmap, fixed pricing, and a delivery timeline — no ambiguity, no hidden scope." },
+  { n: "03", title: "Build",      desc: "Agile delivery with weekly check-ins so you see progress continuously, not just at launch." },
+  { n: "04", title: "Launch",     desc: "Deployment with full team training to ensure adoption and results from day one." },
+  { n: "05", title: "Scale",      desc: "Ongoing monitoring, optimisation, and scaling as your business evolves and grows." },
 ];
 
 function Process() {
   return (
-    <section id="process" style={S.processSection}>
+    <section id="process" style={{ ...S.section, background: T.bg }}>
       <div style={S.container}>
         <Reveal>
-          <div style={{ ...S.label, color: "rgba(255,255,255,0.35)" }}>
-            <span style={{ ...S.labelLine, background: "rgba(255,255,255,0.2)" }} />
-            How We Work
-          </div>
-          <h2 style={{ ...S.sectionTitle, color: "#fff" }}>
-            From first call to full<br />deployment — fast
-          </h2>
+          <Kicker>How We Work</Kicker>
+          <h2 style={S.sectionTitle}>From first call to<br /><em style={{ fontStyle: "italic" }}>full deployment — fast</em></h2>
         </Reveal>
         <div style={S.processGrid}>
-          {STEPS.map((s) => (
+          {STEPS.map(s => (
             <div key={s.n} style={S.processStep}
-              onMouseOver={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.04)"; }}
-              onMouseOut={(e) => { (e.currentTarget as HTMLDivElement).style.background = "#0d0d12"; }}
+              onMouseOver={e => { (e.currentTarget as HTMLDivElement).style.background = "#0e0e1a"; }}
+              onMouseOut={e => { (e.currentTarget as HTMLDivElement).style.background = "#080810"; }}
             >
-              <div style={S.processStepNum}>{s.n}</div>
-              <div style={S.processStepTitle}>{s.title}</div>
-              <p style={S.processStepDesc}>{s.desc}</p>
+              <div style={S.processNum}>{s.n}</div>
+              <div style={S.processTitle}>{s.title}</div>
+              <p style={S.processDesc}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -1008,62 +1113,57 @@ function Process() {
   );
 }
 
-/* ── Divider ── */
-function FullWidthDivider() {
+function Divider() {
   return (
-    <div style={S.dividerOverlay}>
-      <img src={IMAGES.office} alt="MK Solutions office" style={S.dividerImg} loading="lazy" />
-      <div style={{ position: "absolute", inset: 0, background: "rgba(13,13,18,0.55)" }} />
-      <div style={S.dividerText}>
-        <p style={S.dividerQuote}>
-          "We don't just implement technology — we transform the way your organisation thinks and operates."
-        </p>
-        <p style={S.dividerCaption}>MK Solutions — Nairobi, Kenya</p>
+    <div style={S.divider}>
+      <img src={IMG.divider} alt="" aria-hidden="true" style={S.dividerBg} />
+      <div style={S.dividerVeil} />
+      <div style={S.dividerInner}>
+        <div>
+          <blockquote style={S.dividerQuote}>
+            "We don't just implement technology — we transform the way your organisation thinks, operates, and competes."
+          </blockquote>
+          <span style={S.dividerSource}>Prime Edge AI — Nairobi, Kenya</span>
+        </div>
       </div>
     </div>
   );
 }
 
-/* ── Contact ── */
 function Contact() {
   const [sent, setSent] = useState(false);
+  const accentColor = "#6B8CFF";
 
-  const contactItems = [
-    {
-      label: "Location", value: "Nairobi, Kenya",
-      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>,
-    },
-    {
-      label: "Phone / WhatsApp", value: "+254 706 384 510",
-      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" /></svg>,
-    },
-    {
-      label: "Email", value: "info@mksolutions.co.ke",
-      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>,
-    },
-    {
-      label: "Business Hours", value: "Mon – Fri, 8AM – 6PM EAT",
-      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>,
-    },
+  const items = [
+    { label: "Location", value: "Nairobi, Kenya",
+      icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg> },
+    { label: "Phone", value: "+254 706 384 510",
+      icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" /></svg> },
+    { label: "Email", value: "info@primeedgeai.com",
+      icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg> },
+    { label: "Hours", value: "Mon – Fri, 8AM – 6PM EAT",
+      icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
   ];
 
+  const fo = { borderColor: accentColor };
+  const fb = { borderColor: "rgba(255,255,255,0.07)" };
+
   return (
-    <section id="contact" style={{ ...S.section, background: "#fff" }}>
+    <section id="contact" style={S.contactSection}>
       <div style={S.container}>
         <Reveal>
-          <SectionLabel>Get In Touch</SectionLabel>
-          <h2 style={{ ...S.sectionTitle, marginBottom: 56 }}>
-            Ready to transform<br />your business?
+          <Kicker>Get In Touch</Kicker>
+          <h2 style={{ ...S.sectionTitle, marginBottom: 64 }}>
+            Ready to gain<br /><em style={{ fontStyle: "italic" }}>your edge?</em>
           </h2>
         </Reveal>
-
         <div style={S.contactGrid}>
           <Reveal>
-            <p style={S.contactInfoBody}>
-              Whether you want to explore AI for your team, automate your workflows, build a new website, or unlock your data — we are ready to help. Let's start with a conversation.
+            <p style={S.contactBody}>
+              Whether you want to deploy AI in your business, upskill your team, build a high-performance website, or unlock your data — Prime Edge AI is ready. Let's start with a conversation.
             </p>
             <div style={S.contactItems}>
-              {contactItems.map((ci) => (
+              {items.map(ci => (
                 <div key={ci.label} style={S.contactItem}>
                   <div style={S.ciIconBox}>{ci.icon}</div>
                   <div>
@@ -1081,23 +1181,23 @@ function Contact() {
                 <div style={S.formRow}>
                   <label style={S.formLabel}>First Name</label>
                   <input style={S.formInput} type="text" placeholder="John"
-                    onFocus={(e) => { (e.currentTarget as HTMLInputElement).style.borderColor = "#1246F6"; }}
-                    onBlur={(e) => { (e.currentTarget as HTMLInputElement).style.borderColor = "rgba(13,13,18,0.08)"; }}
+                    onFocus={e => Object.assign((e.currentTarget as HTMLInputElement).style, fo)}
+                    onBlur={e => Object.assign((e.currentTarget as HTMLInputElement).style, fb)}
                   />
                 </div>
                 <div style={S.formRow}>
                   <label style={S.formLabel}>Last Name</label>
                   <input style={S.formInput} type="text" placeholder="Doe"
-                    onFocus={(e) => { (e.currentTarget as HTMLInputElement).style.borderColor = "#1246F6"; }}
-                    onBlur={(e) => { (e.currentTarget as HTMLInputElement).style.borderColor = "rgba(13,13,18,0.08)"; }}
+                    onFocus={e => Object.assign((e.currentTarget as HTMLInputElement).style, fo)}
+                    onBlur={e => Object.assign((e.currentTarget as HTMLInputElement).style, fb)}
                   />
                 </div>
               </div>
               <div style={S.formRow}>
                 <label style={S.formLabel}>Email Address</label>
                 <input style={S.formInput} type="email" placeholder="john@company.com"
-                  onFocus={(e) => { (e.currentTarget as HTMLInputElement).style.borderColor = "#1246F6"; }}
-                  onBlur={(e) => { (e.currentTarget as HTMLInputElement).style.borderColor = "rgba(13,13,18,0.08)"; }}
+                  onFocus={e => Object.assign((e.currentTarget as HTMLInputElement).style, fo)}
+                  onBlur={e => Object.assign((e.currentTarget as HTMLInputElement).style, fb)}
                 />
               </div>
               <div style={S.formRow}>
@@ -1114,45 +1214,46 @@ function Contact() {
               <div style={S.formRow}>
                 <label style={S.formLabel}>Message</label>
                 <textarea style={S.formTextarea} placeholder="Tell us about your project or challenge..."
-                  onFocus={(e) => { (e.currentTarget as HTMLTextAreaElement).style.borderColor = "#1246F6"; }}
-                  onBlur={(e) => { (e.currentTarget as HTMLTextAreaElement).style.borderColor = "rgba(13,13,18,0.08)"; }}
+                  onFocus={e => Object.assign((e.currentTarget as HTMLTextAreaElement).style, fo)}
+                  onBlur={e => Object.assign((e.currentTarget as HTMLTextAreaElement).style, fb)}
                 />
               </div>
               <button
-                style={{ ...S.formSubmit, background: sent ? "#16a34a" : "#0d0d12" }}
-                onMouseOver={(e) => { if (!sent) (e.currentTarget as HTMLButtonElement).style.background = "#1246F6"; }}
-                onMouseOut={(e) => { if (!sent) (e.currentTarget as HTMLButtonElement).style.background = "#0d0d12"; }}
+                style={{ ...S.formSubmit, background: sent ? "#1a7a3c" : accentColor }}
+                onMouseOver={e => { if (!sent) (e.currentTarget as HTMLButtonElement).style.background = "#4a6ef0"; }}
+                onMouseOut={e => { if (!sent) (e.currentTarget as HTMLButtonElement).style.background = accentColor; }}
                 onClick={() => { setSent(true); setTimeout(() => setSent(false), 3000); }}
               >
-                {sent ? "Message Sent" : "Send Message"}
+                {sent ? "Message Received" : "Send Message"}
               </button>
             </div>
           </Reveal>
         </div>
-      </div>
 
-      <div style={{ maxWidth: 1160, margin: "64px auto 0" }}>
-        <iframe
-          title="MK Solutions Location"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
-          width="100%"
-          height="280"
-          style={{ border: "1px solid rgba(13,13,18,0.08)", borderRadius: 16, display: "block" }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
+        <div style={{ marginTop: 64 }}>
+          <iframe
+            title="Prime Edge AI Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
+            width="100%" height="260"
+            style={{
+              border: "1px solid rgba(255,255,255,0.07)",
+              borderRadius: 0,
+              display: "block",
+              filter: "invert(0.9) hue-rotate(180deg) saturate(0.25) brightness(0.65)",
+            }}
+            allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
       </div>
     </section>
   );
 }
 
-/* ── Footer ── */
 function Footer() {
   const cols = [
     { title: "Services", links: ["AI & Automation", "AI Training", "Website Creation", "Data Analytics"] },
-    { title: "Company", links: ["About Us", "How We Work", "Contact"] },
-    { title: "Connect", links: ["info@mksolutions.co.ke", "+254 706 384 510", "WhatsApp Us"] },
+    { title: "Company",  links: ["About Us", "How We Work", "Contact"] },
+    { title: "Connect",  links: ["info@primeedgeai.com", "+254 706 384 510", "WhatsApp Us"] },
   ];
 
   return (
@@ -1161,24 +1262,22 @@ function Footer() {
         <div style={S.footerTop}>
           <div>
             <span style={S.footerLogo}>
-              MK<span style={{ color: "#1246F6" }}>Solutions</span>
+              Prime <em style={{ fontStyle: "italic", color: "#6B8CFF" }}>Edge</em> AI
             </span>
-            <p style={S.footerBrandText}>
-              Helping African businesses grow through AI, automation, and intelligent digital solutions.
+            <p style={S.footerDesc}>
+              Equipping African businesses with intelligent technology to outperform, outscale, and outlast the competition.
             </p>
           </div>
-          {cols.map((col) => (
+          {cols.map(col => (
             <div key={col.title}>
-              <div style={S.footerColTitle}>{col.title}</div>
+              <span style={S.footerColHead}>{col.title}</span>
               <ul style={S.footerList}>
-                {col.links.map((l) => (
+                {col.links.map(l => (
                   <li key={l}>
                     <a href="#" style={S.footerLink}
-                      onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.85)"; }}
-                      onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.45)"; }}
-                    >
-                      {l}
-                    </a>
+                      onMouseOver={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#F0F0F8"; }}
+                      onMouseOut={e => { (e.currentTarget as HTMLAnchorElement).style.color = "rgba(240,240,248,0.28)"; }}
+                    >{l}</a>
                   </li>
                 ))}
               </ul>
@@ -1186,8 +1285,8 @@ function Footer() {
           ))}
         </div>
         <div style={S.footerBottom}>
-          <p style={S.footerCopy}>© 2025 MK Solutions Limited. All rights reserved.</p>
-          <div style={{ display: "flex", gap: 20 }}>
+          <p style={S.footerCopy}>© 2025 Prime Edge AI Limited. All rights reserved.</p>
+          <div style={{ display: "flex", gap: 24 }}>
             <a href="#" style={S.footerLink}>Privacy Policy</a>
             <a href="#" style={S.footerLink}>Terms of Service</a>
           </div>
@@ -1197,39 +1296,41 @@ function Footer() {
   );
 }
 
-/* ── WhatsApp Float ── */
 function WhatsAppFloat() {
   return (
     <a
       href="https://wa.me/254706384510?text=Hello%21%20I%27m%20interested%20in%20your%20services."
-      target="_blank"
-      rel="noopener noreferrer"
+      target="_blank" rel="noopener noreferrer"
       style={S.waFloat}
-      onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1.1)"; }}
-      onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)"; }}
+      onMouseOver={e => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        el.style.transform = "translateY(-3px)";
+        el.style.boxShadow = "0 8px 32px rgba(37,211,102,0.5)";
+      }}
+      onMouseOut={e => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        el.style.transform = "translateY(0)";
+        el.style.boxShadow = "0 4px 24px rgba(37,211,102,0.35)";
+      }}
       aria-label="Chat on WhatsApp"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
         <path d="M12.04 2.01A10 10 0 0 0 2 12.06a9.84 9.84 0 0 0 1.37 5.09L2 22l5.07-1.33a9.95 9.95 0 0 0 4.96 1.28H12A10 10 0 0 0 12.04 2zM12 20.08a8.07 8.07 0 0 1-4.1-1.13l-.3-.17-3.02.79.8-2.94-.2-.31a8.04 8.04 0 1 1 14.9-4.27 8.03 8.03 0 0 1-8.08 8.03zm4.62-6.03c-.26-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.66.83-.81 1-.3.2-.56.07a6.6 6.6 0 0 1-1.94-1.2 7.4 7.4 0 0 1-1.37-1.7c-.14-.26 0-.4.12-.53s.26-.3.4-.45c.14-.15.2-.26.3-.43a.5.5 0 0 0-.02-.48c-.07-.14-.57-1.37-.78-1.87s-.4-.42-.56-.43h-.48a.92.92 0 0 0-.67.31 2.78 2.78 0 0 0-.86 2.06c0 1.22.87 2.4 1 2.57.13.17 1.7 2.6 4.13 3.64.58.25 1.04.4 1.4.51a3.35 3.35 0 0 0 1.56.1 2.66 2.66 0 0 0 1.75-1.22c.22-.3.22-.54.16-.74s-.24-.17-.5-.3z" />
       </svg>
     </a>
   );
 }
 
-/* ── App Root ── */
 export default function App() {
   return (
     <div style={S.root}>
-      {/* Topbar scrolls away naturally above the fixed nav */}
-      <div style={{ paddingTop: 0 }}>
-        <Topbar />
-      </div>
+      <Topbar />
       <Navbar />
       <Hero />
       <Services />
       <About />
       <Process />
-      <FullWidthDivider />
+      <Divider />
       <Contact />
       <Footer />
       <WhatsAppFloat />
