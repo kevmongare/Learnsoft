@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
    IMAGES
 ───────────────────────────────────────── */
 const IMG = {
-  logo:      "/PrimeEdge_AI_Logo-removebg-preview.png",   // ← place your logo in /public/logo.png
+  logo:      "/PrimeEdge_AI_Logo-removebg-preview.png",
   hero:      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1800&q=85&auto=format&fit=crop",
   ai:        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80&auto=format&fit=crop",
   training:  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80&auto=format&fit=crop",
@@ -27,7 +27,7 @@ if (!document.head.querySelector("[data-pe-fonts]")) {
   document.head.appendChild(l);
 }
 
-/* Custom CSS injected once for things Tailwind can't express inline */
+/* Custom CSS injected once */
 if (!document.head.querySelector("[data-pe-css]")) {
   const style = document.createElement("style");
   style.setAttribute("data-pe-css", "true");
@@ -53,6 +53,9 @@ if (!document.head.querySelector("[data-pe-css]")) {
     .btn-accent:hover   { background: #4a6ef0 !important; box-shadow: 0 8px 32px rgba(107,140,255,.35); }
     .btn-outline:hover  { border-color: rgba(255,255,255,.4) !important; color: #F0F0F8 !important; }
     .nav-cta:hover { background: #6B8CFF !important; color: #fff !important; }
+    /* Topbar slide-up when scrolled */
+    .topbar-hidden { transform: translateY(-100%); }
+    .topbar-transition { transition: transform 0.3s ease; }
   `;
   document.head.appendChild(style);
 }
@@ -108,36 +111,40 @@ function Kicker({ children }: { children: ReactNode }) {
 
 /* ─────────────────────────────────────────
    TOPBAR
+   — visible at top of page, scrolls away
 ───────────────────────────────────────── */
-function Topbar() {
+const TOPBAR_HEIGHT = 36; // px — keep in sync with the topbar's rendered height
+
+function Topbar({ scrolled }: { scrolled: boolean }) {
   return (
-    <div className="bg-[#05050d] border-b border-white/[.06] px-12 py-2 flex flex-wrap justify-between items-center gap-2
-                    text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
-      <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">
-        Prime Edge AI
-      </span>
-      <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
+    <div
+      className={`fixed top-0 left-0 right-0 z-[300] topbar-transition ${scrolled ? "topbar-hidden" : ""}`}
+      style={{ height: TOPBAR_HEIGHT }}
+    >
+      <div className="bg-[#05050d] border-b border-white/[.06] px-12 h-full flex flex-wrap justify-between items-center gap-2
+                      text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
+        <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">
+          Prime Edge AI
+        </span>
+        <span>info@primeedgeai.com &nbsp;·&nbsp; +254 706 384 510 &nbsp;·&nbsp; Nairobi, Kenya</span>
+      </div>
     </div>
   );
 }
 
 /* ─────────────────────────────────────────
    NAVBAR
+   — sits below topbar initially, sticks to
+     the very top once topbar scrolls away
 ───────────────────────────────────────── */
-function Navbar() {
-  const [open, setOpen]       = useState(false);
-  const [wide, setWide]       = useState(window.innerWidth >= 900);
-  const [scrolled, setScrolled] = useState(false);
+function Navbar({ scrolled }: { scrolled: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [wide, setWide] = useState(window.innerWidth >= 900);
 
   useEffect(() => {
     const onResize = () => setWide(window.innerWidth >= 900);
-    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("resize", onResize);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const links = [
@@ -147,14 +154,28 @@ function Navbar() {
     { label: "Contact",  href: "#contact" },
   ];
 
+  // When not yet scrolled: navbar sits just below the topbar
+  // When scrolled: topbar is gone, navbar is pinned at top:0
+  const navTop = scrolled ? 0 : TOPBAR_HEIGHT;
+
   return (
     <>
       <nav
-        className="sticky top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-400"
-        style={scrolled
-          ? { background: "rgba(8,8,16,.96)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,.07)", boxShadow: "0 4px 40px rgba(0,0,0,.5)" }
-          : { background: "transparent" }
-        }
+        className="fixed left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between"
+        style={{
+          top: navTop,
+          transition: "top 0.3s ease, background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease",
+          ...(scrolled
+            ? {
+                background: "rgba(8,8,16,.96)",
+                backdropFilter: "blur(24px)",
+                borderBottom: "1px solid rgba(255,255,255,.07)",
+                boxShadow: "0 4px 40px rgba(0,0,0,.5)",
+              }
+            : {
+                background: "transparent",
+              }),
+        }}
       >
         {/* ── Logo ── */}
         <a href="#" className="flex items-center h-full py-3">
@@ -163,14 +184,12 @@ function Navbar() {
             alt="Prime Edge AI"
             className="h-20 w-auto object-contain"
             onError={(e) => {
-              /* fallback text logo if image missing */
               const img = e.currentTarget as HTMLImageElement;
               img.style.display = "none";
               const fallback = img.nextElementSibling as HTMLElement | null;
               if (fallback) fallback.style.display = "block";
             }}
           />
-          {/* Text fallback (hidden when image loads) */}
           <span
             className="font-serif text-[1.3rem] font-light text-[#F0F0F8] tracking-[.04em]"
             style={{ display: "none" }}
@@ -230,9 +249,12 @@ function Navbar() {
       {/* ── Mobile drawer ── */}
       {open && !wide && (
         <div
-          className="fixed top-[72px] left-0 right-0 z-[199] bg-[#0e0e1a] border-b border-white/[.07]
-                     px-8 py-7 flex flex-col gap-1"
-          style={{ boxShadow: "0 24px 60px rgba(0,0,0,.6)" }}
+          className="fixed left-0 right-0 z-[199] bg-[#0e0e1a] border-b border-white/[.07] px-8 py-7 flex flex-col gap-1"
+          style={{
+            top: scrolled ? 72 : TOPBAR_HEIGHT + 72,
+            transition: "top 0.3s ease",
+            boxShadow: "0 24px 60px rgba(0,0,0,.6)",
+          }}
         >
           {links.map(l => (
             <a
@@ -264,10 +286,10 @@ function Navbar() {
 ───────────────────────────────────────── */
 function Hero() {
   const stats = [
-    { num: "500+", label: "Clients Served",    last: false },
-    { num: "10+",  label: "Years Experience",  last: false },
-    { num: "20+",  label: "AI Solutions Built",last: false },
-    { num: "100%", label: "Satisfaction Rate", last: true  },
+    { num: "500+", label: "Clients Served",     last: false },
+    { num: "10+",  label: "Years Experience",   last: false },
+    { num: "20+",  label: "AI Solutions Built", last: false },
+    { num: "100%", label: "Satisfaction Rate",  last: true  },
   ];
 
   return (
@@ -280,8 +302,9 @@ function Hero() {
       <div className="hero-grad-b absolute bottom-0 left-0 right-0 h-[40%] z-[1]" />
       <div className="hero-glow absolute top-[-10%] right-[-5%] w-1/2 h-[70%] z-[1] pointer-events-none" />
 
-      {/* Content */}
-      <div className="relative z-[2] w-full max-w-[1160px] mx-auto px-20 pt-[72px]">
+      {/* Content — padded top to clear topbar + navbar */}
+      <div className="relative z-[2] w-full max-w-[1160px] mx-auto px-20"
+           style={{ paddingTop: `calc(${TOPBAR_HEIGHT}px + 72px + 48px)` }}>
 
         {/* Kicker */}
         <div className="flex items-center gap-4 mb-9">
@@ -330,7 +353,7 @@ function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="flex flex-wrap border-t border-white/[.07] pt-10">
+        <div className="flex flex-wrap border-t border-white/[.07] pt-10 pb-16">
           {stats.map(s => (
             <div
               key={s.num}
@@ -357,9 +380,9 @@ function Hero() {
 ───────────────────────────────────────── */
 const SERVICES = [
   { tag: "Artificial Intelligence", title: "AI & Automation",  desc: "Custom AI agents and workflow automation that eliminate repetitive tasks, reduce costs, and operate 24/7 without oversight.", img: IMG.ai },
-  { tag: "Training & Upskilling",   title: "AI Training",       desc: "Practical workshops that transform your team from passive observers to confident AI operators — at every skill level.", img: IMG.training },
-  { tag: "Digital Presence",        title: "Website Creation",  desc: "Performance-first, visually striking web experiences built for conversion, credibility, and long-term brand authority.", img: IMG.web },
-  { tag: "Business Intelligence",   title: "Data Analytics",    desc: "Transform fragmented data into unified intelligence — dashboards, forecasting models, and reports that drive decisions.", img: IMG.analytics },
+  { tag: "Training & Upskilling",   title: "AI Training",      desc: "Practical workshops that transform your team from passive observers to confident AI operators — at every skill level.", img: IMG.training },
+  { tag: "Digital Presence",        title: "Website Creation", desc: "Performance-first, visually striking web experiences built for conversion, credibility, and long-term brand authority.", img: IMG.web },
+  { tag: "Business Intelligence",   title: "Data Analytics",   desc: "Transform fragmented data into unified intelligence — dashboards, forecasting models, and reports that drive decisions.", img: IMG.analytics },
 ];
 
 function Services() {
@@ -382,7 +405,6 @@ function Services() {
           </div>
         </Reveal>
 
-        {/* Card grid — 1px gap on a border-coloured background = hairline grid lines */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[.07] border border-white/[.07]">
           {SERVICES.map((svc, i) => (
             <Reveal key={svc.title} delay={i * 0.07}>
@@ -418,9 +440,9 @@ function Services() {
 ───────────────────────────────────────── */
 function About() {
   const points = [
-    { n: "01", title: "Goals before technology",       body: "Every engagement starts with your operations — we build what you actually need, not what sounds impressive." },
+    { n: "01", title: "Goals before technology",          body: "Every engagement starts with your operations — we build what you actually need, not what sounds impressive." },
     { n: "02", title: "Deliver, then transfer knowledge", body: "We train your team on every solution — so results outlast our involvement and adoption is guaranteed." },
-    { n: "03", title: "Long-term partnership",         body: "We monitor, optimise, and scale alongside you. We measure success by your growth, not just project delivery." },
+    { n: "03", title: "Long-term partnership",            body: "We monitor, optimise, and scale alongside you. We measure success by your growth, not just project delivery." },
   ];
 
   return (
@@ -433,7 +455,6 @@ function About() {
             <div className="relative overflow-hidden">
               <img src={IMG.about} alt="Prime Edge AI team" className="img-about w-full object-cover block"
                    style={{ height: 560 }} loading="lazy" />
-              {/* Bottom fade */}
               <div className="absolute bottom-0 left-0 right-0 h-[35%]"
                    style={{ background: "linear-gradient(to top, #0e0e1a 0%, transparent 100%)" }} />
             </div>
@@ -489,11 +510,11 @@ function About() {
    PROCESS
 ───────────────────────────────────────── */
 const STEPS = [
-  { n: "01", title: "Discovery",  desc: "Free consultation to understand your goals and where AI creates the most leverage." },
-  { n: "02", title: "Strategy",   desc: "Clear roadmap, fixed pricing, delivery timeline — no ambiguity, no hidden scope." },
-  { n: "03", title: "Build",      desc: "Agile delivery with weekly check-ins so you see progress continuously." },
-  { n: "04", title: "Launch",     desc: "Deployment with full team training to ensure adoption from day one." },
-  { n: "05", title: "Scale",      desc: "Ongoing monitoring, optimisation, and scaling as your business evolves." },
+  { n: "01", title: "Discovery", desc: "Free consultation to understand your goals and where AI creates the most leverage." },
+  { n: "02", title: "Strategy",  desc: "Clear roadmap, fixed pricing, delivery timeline — no ambiguity, no hidden scope." },
+  { n: "03", title: "Build",     desc: "Agile delivery with weekly check-ins so you see progress continuously." },
+  { n: "04", title: "Launch",    desc: "Deployment with full team training to ensure adoption from day one." },
+  { n: "05", title: "Scale",     desc: "Ongoing monitoring, optimisation, and scaling as your business evolves." },
 ];
 
 function Process() {
@@ -539,10 +560,8 @@ function Divider() {
     <div className="relative overflow-hidden" style={{ height: 480 }}>
       <img src={IMG.divider} alt="" aria-hidden
            className="img-divider absolute inset-0 w-full h-full object-cover object-[center_40%] z-0" />
-      {/* Veil */}
       <div className="absolute inset-0 z-[1]"
            style={{ background: "linear-gradient(to right, rgba(8,8,16,.97) 0%, rgba(8,8,16,.4) 55%, transparent 100%)" }} />
-      {/* Text */}
       <div className="absolute inset-0 z-[2] flex items-center px-20">
         <div>
           <blockquote className="font-serif font-light italic text-[#F0F0F8] leading-[1.32] tracking-[-0.01em]"
@@ -712,7 +731,6 @@ function Footer() {
   return (
     <footer className="bg-[#05050d] border-t border-white/[.06] px-12 pt-16 pb-8">
       <div className="max-w-[1160px] mx-auto">
-        {/* Top grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.8fr_1fr_1fr_1fr] gap-12 pb-14 mb-8 border-b border-white/[.06]">
           <div>
             <span className="block font-serif font-light text-[#F0F0F8] text-[1.5rem] tracking-[.02em] mb-4">
@@ -741,7 +759,6 @@ function Footer() {
           ))}
         </div>
 
-        {/* Bottom row */}
         <div className="flex flex-wrap justify-between items-center gap-3">
           <p className="font-sans-pe font-light text-white/22 text-[.71rem] tracking-[.04em]">
             © 2025 Prime Edge AI Limited. All rights reserved.
@@ -777,15 +794,25 @@ function WhatsAppFloat() {
 
 /* ─────────────────────────────────────────
    APP ROOT
+   — single scroll listener drives both
+     Topbar (slides away) and Navbar (sticks)
 ───────────────────────────────────────── */
 export default function App() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > TOPBAR_HEIGHT);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div
       className="font-sans-pe text-[#F0F0F8] antialiased overflow-x-hidden"
       style={{ backgroundColor: "#080810", color: "#F0F0F8", minHeight: "100vh" }}
     >
-      <Topbar />
-      <Navbar />
+      <Topbar scrolled={scrolled} />
+      <Navbar scrolled={scrolled} />
       <Hero />
       <Services />
       <About />
