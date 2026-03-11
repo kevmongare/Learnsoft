@@ -46,18 +46,28 @@ const S: StyleMap = {
     gap: 8,
   },
   nav: {
-    position: "sticky",
+    position: "fixed",
     top: 0,
-    zIndex: 100,
-    background: "rgba(255,255,255,0.94)",
-    backdropFilter: "blur(18px)",
-    WebkitBackdropFilter: "blur(18px)",
-    borderBottom: "1px solid rgba(13,13,18,0.08)",
+    left: 0,
+    right: 0,
+    zIndex: 200,
+    background: "rgba(255,255,255,0.0)",
+    backdropFilter: "blur(0px)",
+    WebkitBackdropFilter: "blur(0px)",
+    borderBottom: "1px solid transparent",
     padding: "0 48px",
-    height: 68,
+    height: 72,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    transition: "background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
+  },
+  navScrolled: {
+    background: "rgba(255,255,255,0.96)",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    borderBottom: "1px solid rgba(13,13,18,0.08)",
+    boxShadow: "0 2px 24px rgba(13,13,18,0.06)",
   },
   logo: {
     fontFamily: "'Instrument Serif', Georgia, serif",
@@ -664,11 +674,17 @@ function Topbar() {
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [wide, setWide] = useState(window.innerWidth >= 900);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handler = () => setWide(window.innerWidth >= 900);
-    window.addEventListener("resize", handler);
-    return () => window.removeEventListener("resize", handler);
+    const onResize = () => setWide(window.innerWidth >= 900);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const links = [
@@ -678,20 +694,32 @@ function Navbar() {
     { label: "Contact", href: "#contact" },
   ];
 
+  // Over hero: white text / transparent nav. After scroll: dark text / frosted nav.
+  const navStyle: CSSProperties = {
+    ...S.nav,
+    ...(scrolled ? S.navScrolled : {}),
+  };
+
+  const linkColor = scrolled ? "#3a3a4a" : "rgba(255,255,255,0.85)";
+  const logoColor = scrolled ? "#0d0d12" : "#ffffff";
+  const hamburgerColor = scrolled ? "#0d0d12" : "#ffffff";
+
   return (
     <>
-      <nav style={S.nav}>
-        <a href="#" style={S.logo}>
-          MK<span style={S.logoAccent}>Solutions</span>
+      <nav style={navStyle}>
+        <a href="#" style={{ ...S.logo, color: logoColor }}>
+          MK<span style={{ color: "#1246F6" }}>Solutions</span>
         </a>
 
         {wide && (
           <ul style={S.navLinks}>
             {links.map((l) => (
               <li key={l.label}>
-                <a href={l.href} style={S.navLink}
+                <a
+                  href={l.href}
+                  style={{ ...S.navLink, color: linkColor }}
                   onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#1246F6"; }}
-                  onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#3a3a4a"; }}
+                  onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = linkColor; }}
                 >
                   {l.label}
                 </a>
@@ -701,9 +729,19 @@ function Navbar() {
         )}
 
         {wide && (
-          <a href="#contact" style={S.navCta}
-            onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#1246F6"; }}
-            onMouseOut={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#0d0d12"; }}
+          <a
+            href="#contact"
+            style={{
+              ...S.navCta,
+              background: scrolled ? "#0d0d12" : "rgba(255,255,255,0.12)",
+              border: scrolled ? "none" : "1.5px solid rgba(255,255,255,0.3)",
+              color: "#fff",
+            }}
+            onMouseOver={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#1246F6"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "#1246F6"; }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = scrolled ? "#0d0d12" : "rgba(255,255,255,0.12)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = scrolled ? "transparent" : "rgba(255,255,255,0.3)";
+            }}
           >
             Book Consultation
           </a>
@@ -717,9 +755,9 @@ function Navbar() {
           >
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
               {open ? (
-                <path d="M4 4L18 18M18 4L4 18" stroke="#0d0d12" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M4 4L18 18M18 4L4 18" stroke={hamburgerColor} strokeWidth="1.8" strokeLinecap="round" />
               ) : (
-                <path d="M3 6h16M3 11h16M3 16h16" stroke="#0d0d12" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M3 6h16M3 11h16M3 16h16" stroke={hamburgerColor} strokeWidth="1.8" strokeLinecap="round" />
               )}
             </svg>
           </button>
@@ -728,7 +766,7 @@ function Navbar() {
 
       {open && !wide && (
         <div style={{
-          position: "fixed", top: 68, left: 0, right: 0, zIndex: 99,
+          position: "fixed", top: 72, left: 0, right: 0, zIndex: 199,
           background: "#fff", borderBottom: "1px solid rgba(13,13,18,0.08)",
           padding: "28px 32px 36px", display: "flex", flexDirection: "column", gap: 16,
           boxShadow: "0 24px 48px rgba(0,0,0,0.08)",
@@ -762,9 +800,31 @@ function Hero() {
 
   return (
     <section style={S.hero}>
-      <div style={{ ...S.heroBg, backgroundImage: `url(${IMAGES.hero})` }} />
-      <div style={S.heroOverlay} />
-      <div style={S.heroContent}>
+      {/* Full-bleed background image */}
+      <img
+        src={IMAGES.hero}
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          zIndex: 0,
+        }}
+      />
+      {/* Dark gradient overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "linear-gradient(120deg, rgba(8,8,14,0.88) 35%, rgba(18,70,246,0.22) 100%)",
+        zIndex: 1,
+      }} />
+
+      {/* Content — sits above image and overlay */}
+      <div style={{ ...S.heroContent, zIndex: 2, paddingTop: 72 }}>
         <div style={S.heroEyebrow}>
           <span style={S.heroDot} />
           AI-First Digital Transformation
@@ -1160,7 +1220,10 @@ function WhatsAppFloat() {
 export default function App() {
   return (
     <div style={S.root}>
-      <Topbar />
+      {/* Topbar scrolls away naturally above the fixed nav */}
+      <div style={{ paddingTop: 0 }}>
+        <Topbar />
+      </div>
       <Navbar />
       <Hero />
       <Services />
