@@ -32,8 +32,9 @@ if (!document.head.querySelector("[data-pe-css]")) {
   const style = document.createElement("style");
   style.setAttribute("data-pe-css", "true");
   style.textContent = `
-    :root { scroll-behavior: smooth; }
-    body  { overflow-x: hidden; }
+    :root { scroll-behavior: smooth; color-scheme: dark; }
+    html, body, #root { background-color: #080810 !important; color: #F0F0F8; }
+    body  { overflow-x: hidden; margin: 0; padding: 0; }
     .font-serif   { font-family: 'Cormorant Garamond', Georgia, serif !important; }
     .font-sans-pe { font-family: 'Inter', system-ui, sans-serif !important; }
     .hero-grad-l  { background: linear-gradient(105deg, rgba(8,8,16,.97) 38%, rgba(8,8,16,.5) 65%, transparent 100%); }
@@ -160,7 +161,7 @@ function Navbar() {
           <img
             src={IMG.logo}
             alt="Prime Edge AI"
-            className="h-10 w-auto object-contain"
+            className="h-20 w-auto object-contain"
             onError={(e) => {
               /* fallback text logo if image missing */
               const img = e.currentTarget as HTMLImageElement;
@@ -779,7 +780,10 @@ function WhatsAppFloat() {
 ───────────────────────────────────────── */
 export default function App() {
   return (
-    <div className="font-sans-pe text-[#F0F0F8] bg-[#080810] antialiased overflow-x-hidden">
+    <div
+      className="font-sans-pe text-[#F0F0F8] antialiased overflow-x-hidden"
+      style={{ backgroundColor: "#080810", color: "#F0F0F8", minHeight: "100vh" }}
+    >
       <Topbar />
       <Navbar />
       <Hero />
