@@ -1,579 +1,1285 @@
-import './App.css'
-import { motion } from "framer-motion";
-import { Menu, X } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
 
-// import Learnsoft from './assets/learnsoft.png'
-import Logo from '/Logo.png'
-import background from '/AutomationBg.png'
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-// import SchoolErp from './assets/ERP-Webpage-Graphic-1.png'
-import { FaMobileAlt, FaLaptopCode, FaCloud, FaCogs } from "react-icons/fa";
-import { useState } from "react";
+/* ── Google Fonts injected once ── */
+const fontLink = document.createElement("link");
+fontLink.href = "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Satoshi:wght@300;400;500;700&display=swap";
+fontLink.rel = "stylesheet";
+document.head.appendChild(fontLink);
 
-//menu
+/* ── Unsplash image map ── */
+const IMAGES = {
+  hero:       "https://images.unsplash.com/photo-1677696795873-5006b3f95b44?w=1600&q=80&auto=format&fit=crop",
+  ai:         "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80&auto=format&fit=crop",
+  training:   "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80&auto=format&fit=crop",
+  web:        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80&auto=format&fit=crop",
+  analytics:  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format&fit=crop",
+  team:       "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=80&auto=format&fit=crop",
+  office:     "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80&auto=format&fit=crop",
+};
 
-const navLinks = [
-  { href: '#', label: 'Home' },
-  { href: '#Overview', label: 'Overview' },
-  { href: '#products', label: 'Products' },
-  { href: '#services', label: 'Services' },
-  { href: '#Aboutus', label: 'About Us' },
-  { href: '#contact', label: 'Contact Us' },
-];
-
-
-//services
-
-const services = [
-  {
-    title: "Mobile App Development",
-    icon: <FaMobileAlt className="text-4xl text-blue-500 animate-bounce" />,
-    description:
-      "Custom mobile applications tailored for both Android and iOS platforms.",
+/* ── Inline styles object ── */
+const S = {
+  root: {
+    fontFamily: "'Satoshi', 'DM Sans', sans-serif",
+    color: "#0d0d12",
+    background: "#ffffff",
+    WebkitFontSmoothing: "antialiased",
+    overflowX: "hidden",
   },
-  {
-    title: "Web App Development",
-    icon: (
-      <FaLaptopCode className="text-4xl text-blue-500 animate-spin-slow" />
-    ),
-    description:
-      "Responsive and scalable web platforms using the latest tech stacks.",
+
+  /* Topbar */
+  topbar: {
+    background: "#0d0d12",
+    color: "rgba(255,255,255,0.55)",
+    fontSize: "0.75rem",
+    letterSpacing: "0.05em",
+    padding: "10px 40px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 8,
   },
-  {
-    title: "Cloud Services",
-    icon: <FaCloud className="text-4xl text-blue-500 animate-pulse" />,
-    description:
-      "Secure cloud infrastructure setup and management for modern scalability.",
+
+  /* Nav */
+  nav: {
+    position: "sticky",
+    top: 0,
+    zIndex: 100,
+    background: "rgba(255,255,255,0.94)",
+    backdropFilter: "blur(18px)",
+    WebkitBackdropFilter: "blur(18px)",
+    borderBottom: "1px solid rgba(13,13,18,0.08)",
+    padding: "0 48px",
+    height: 68,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  {
-    title: "IT Consulting",
-    icon: <FaCogs className="text-4xl text-blue-500 animate-wiggle" />,
-    description:
-      "Professional advisory for transforming and optimizing your tech operations.",
+
+  logo: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "1.45rem",
+    fontWeight: 400,
+    color: "#0d0d12",
+    textDecoration: "none",
+    letterSpacing: "-0.01em",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
   },
-];
 
-//Products
+  logoAccent: { color: "#1246F6" },
 
-const products = [
-  {
-    title: "ERP System",
-    description:
-      "A powerful all-in-one platform to manage sales, inventory, payroll, HR, and finance.",
-    image:
-      "https://images.ctfassets.net/lzny33ho1g45/1FzzuoyZ554G7ApEDxJZJJ/e8f00ca2c12848541ae01a2dee00f003/0aca5b23-e069-40b7-abce-a0fc846cd857.png",
+  navLinks: {
+    display: "flex",
+    gap: 36,
+    listStyle: "none",
+    margin: 0,
+    padding: 0,
+    alignItems: "center",
   },
-  {
-    title: "School Management System",
-    description:
-      "Modernize school operations with digital attendance, grading, timetabling, and more.",
-    image:
-      "https://i0.wp.com/inceptor.co.ke/wp-content/uploads/2019/09/school-management-system-in-Kenya-Inceptor.png?ssl=1",
+
+  navLink: {
+    fontSize: "0.86rem",
+    fontWeight: 500,
+    color: "#3a3a4a",
+    textDecoration: "none",
+    letterSpacing: "0.01em",
+    transition: "color 0.18s",
+    cursor: "pointer",
   },
-  {
-    title: "Healthcare Software",
-    description:
-      "Manage patient records, appointments, and billing with ease and security.",
-    image:
-      "https://images.ctfassets.net/lzny33ho1g45/1FzzuoyZ554G7ApEDxJZJJ/e8f00ca2c12848541ae01a2dee00f003/0aca5b23-e069-40b7-abce-a0fc846cd857.png",
+
+  navCta: {
+    background: "#0d0d12",
+    color: "#fff",
+    padding: "10px 24px",
+    borderRadius: 9,
+    fontSize: "0.84rem",
+    fontWeight: 600,
+    textDecoration: "none",
+    transition: "background 0.2s, transform 0.15s",
+    letterSpacing: "0.01em",
+    cursor: "pointer",
+    border: "none",
+    display: "inline-block",
   },
-  {
-    title: "HR & Payroll System",
-    description:
-      "Streamline your human resource operations including payroll and performance tracking.",
-    image:
-      "https://uk.adp.com/-/media/adpuk/redesign2019/images/what-we-offer/products/ihcm/new-ihcm2/ihcm2-corehr.png?rev=2d7b935fcbf8479e94c88ac082bb83b4&la=en&h=348&w=586&hash=2E478FDC38FADA316F7CA1ADA3C9E412",
+
+  /* Hero */
+  hero: {
+    position: "relative",
+    minHeight: "96vh",
+    display: "flex",
+    alignItems: "center",
+    overflow: "hidden",
   },
-];
-//
 
-function App() {
-  //fetching content from our backend that gets data from the admin portal
-  // const [ setContent] = useState({ h1: "", p: "" });
+  heroBg: {
+    position: "absolute",
+    inset: 0,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    filter: "brightness(0.35)",
+  },
 
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/content")
-  //     .then((res) => res.json())
-  //     .then((data) => setContent(data))
-  //     .catch((err) => console.error("Failed to load content:", err));
-  // }, []);
+  heroOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(120deg, rgba(13,13,18,0.92) 40%, rgba(18,70,246,0.18) 100%)",
+  },
 
-  const [isOpen, setIsOpen] = useState(false);
+  heroContent: {
+    position: "relative",
+    zIndex: 2,
+    padding: "0 80px",
+    maxWidth: 1160,
+    margin: "0 auto",
+    width: "100%",
+  },
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-  // Runs once after component mounts
+  heroEyebrow: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 10,
+    background: "rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    color: "rgba(255,255,255,0.7)",
+    fontSize: "0.72rem",
+    fontWeight: 600,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    padding: "9px 18px",
+    borderRadius: 100,
+    marginBottom: 32,
+  },
 
-  //whatsapp connection contact and message
-  const phoneNumber = "254706384510";
-  const message = "Hello! I'm interested in your services.";
+  heroDot: {
+    width: 6, height: 6,
+    background: "#1246F6",
+    borderRadius: "50%",
+    display: "inline-block",
+  },
 
-  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-  //whatsapp link for the float icon
+  heroH1: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "clamp(2.8rem, 6.5vw, 5.4rem)",
+    fontWeight: 400,
+    color: "#ffffff",
+    lineHeight: 1.05,
+    letterSpacing: "-0.025em",
+    marginBottom: 28,
+    maxWidth: 780,
+  },
 
-  // //mailchimp initialization
-  // const [email, setEmail] = useState("");
-  // const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
-  // const [emailMessage, setMessage] = useState("");
+  heroH1Em: {
+    fontStyle: "italic",
+    color: "rgba(255,255,255,0.55)",
+  },
 
+  heroSub: {
+    fontSize: "1.05rem",
+    color: "rgba(255,255,255,0.55)",
+    lineHeight: 1.75,
+    maxWidth: 500,
+    fontWeight: 300,
+    marginBottom: 48,
+  },
 
+  heroActions: {
+    display: "flex",
+    gap: 14,
+    flexWrap: "wrap",
+    marginBottom: 80,
+  },
 
+  btnPrimary: {
+    background: "#1246F6",
+    color: "#fff",
+    padding: "15px 34px",
+    borderRadius: 10,
+    fontWeight: 600,
+    fontSize: "0.88rem",
+    textDecoration: "none",
+    letterSpacing: "0.02em",
+    transition: "background 0.2s, transform 0.15s, box-shadow 0.2s",
+    display: "inline-block",
+    cursor: "pointer",
+    border: "none",
+  },
 
-  return (
-    <>
-      {/* ✅ Sticky Menu Bar */}
-      <section className="h-fit bg-[linear-gradient(60deg,#3b82f6_50%,#FF9800_50%)] text-white">
-        <a href='mailto:kmongare4@gmail.com' className='px-4' >Email : support@mksolutions.com</a>
-      </section>
-      <header className="sticky top-0 z-50 w-full bg-white backdrop-blur-md shadow-md">
-        <div className="px-5 md:px-20 py-2 flex justify-between items-center">
-          <a href="#home" aria-label="Homepage">
-            <img src={Logo} alt="" className='h-15' />
+  btnGhost: {
+    background: "transparent",
+    color: "rgba(255,255,255,0.75)",
+    padding: "14px 32px",
+    borderRadius: 10,
+    fontWeight: 500,
+    fontSize: "0.88rem",
+    textDecoration: "none",
+    border: "1.5px solid rgba(255,255,255,0.18)",
+    transition: "border-color 0.2s, color 0.2s",
+    display: "inline-block",
+    cursor: "pointer",
+  },
 
-            {/*<h1 className="font-extrabold text-3xl cursor-pointer text-blue-950">
-            Learn<span className="text-orange-500">Soft</span>
-            <span className="text-xs font-light">solutions</span>
-          </h1>*/}
-          </a>
+  heroStats: {
+    display: "flex",
+    gap: 48,
+    flexWrap: "wrap",
+  },
 
-          {/* Desktop Menu */}
-          <ul className="hidden md:flex items-center space-x-6">
-            {navLinks.map(({ href, label }) => (
-              <li key={href}>
-                <a
-                  href={href}
-                  className="text-lg font-bold  md:text-4sm text-gray-900 hover:text-blue-600 focus:text-blue-500"
-                >
-                  {label}
-                </a>
-              </li>
-            ))}
-          </ul>
+  heroStat: { textAlign: "left" },
+  heroStatNum: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "2.4rem",
+    color: "#fff",
+    display: "block",
+    lineHeight: 1,
+    marginBottom: 4,
+    fontWeight: 400,
+  },
+  heroStatLabel: {
+    fontSize: "0.75rem",
+    color: "rgba(255,255,255,0.38)",
+    letterSpacing: "0.05em",
+    textTransform: "uppercase",
+  },
 
-          {/* Hamburger Menu */}
-          <button onClick={toggleMenu} className="md:hidden text-gray-700">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+  statLine: {
+    width: 1,
+    background: "rgba(255,255,255,0.1)",
+    alignSelf: "stretch",
+  },
 
-          {/* Mobile Menu */}
-          {isOpen && (
-            <ul className="md:hidden absolute top-full left-0 w-full bg-blue-950  shadow-md py-4 px-6 flex flex-col space-y-2">
-              {navLinks.map(({ href, label }) => (
-                <li key={href} className='hover:bg-white text-white py-1 pl-5 hover:text-[var(--secondary)] rounded-l-2xl'>
-                  <a
-                    href={href}
-                    onClick={() => setIsOpen(false)}
-                    className="text-2sm "
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+  /* Section commons */
+  section: {
+    padding: "100px 48px",
+  },
 
-        </div>
-      </header>
+  container: {
+    maxWidth: 1160,
+    margin: "0 auto",
+  },
 
-      {/* ✅ Hero Section with External CSS background linked on the app.css*/}
-      <motion.section
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        className="relative w-full h-full md:h-[95vh] hero-bg items-center justify-center">
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-85% to-blue-600/30"></div>
+  label: {
+    fontSize: "0.7rem",
+    fontWeight: 700,
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    color: "#1246F6",
+    marginBottom: 14,
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
 
+  labelLine: {
+    width: 22, height: 2,
+    background: "#1246F6",
+    borderRadius: 2,
+    display: "inline-block",
+  },
 
+  sectionTitle: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "clamp(1.9rem, 3.8vw, 3rem)",
+    fontWeight: 400,
+    letterSpacing: "-0.02em",
+    lineHeight: 1.15,
+    color: "#0d0d12",
+    marginBottom: 16,
+  },
 
+  sectionBody: {
+    fontSize: "1rem",
+    color: "#6b6b7b",
+    lineHeight: 1.8,
+    fontWeight: 300,
+    maxWidth: 520,
+  },
 
-        {/* Hero Content */}
-        <div className="relative z-10 h-[95vh] bg-black/20 md:px-20 grid md:flex  text-white justify-between items-center ">
-          <div className='text-center mx-auto '>
-            <div className="relative z-10 items-center fade-in ">
-              <p className="shadow-md bg-black w-fit px-5 text-[var(--primary-color)] my-8 py-2 rounded-full text-start mx-auto">
-                <span className="text-blue-600">✧</span> AI-Powered & Software Business Solutions
-              </p>
-              <h1 className="font-extrabold bg-clip-text  bg-linear-to-l from-white to-100% to-gray-500  md:text-7xl text-4xl font-stretch-110%">
-                We Craft Digital Experiences That Elevate Brands
-              </h1>
-              <p className='text-gray-300 font-light mt-5 md:w-2xl text-center mx-auto '>
-                We are a the first Software automation company focused on helping you solve your repetitive tasks and save you time.
-              </p>
+  /* Services */
+  servicesGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: 24,
+    marginTop: 56,
+  },
 
-              <div className="space-x-4 py-8">
-                <a href='' className="underline px-4 py-4 rounded-md text-[var(--primary-color)]">Book A Free Consultation</a>
+  serviceCard: {
+    borderRadius: 16,
+    overflow: "hidden",
+    border: "1px solid rgba(13,13,18,0.08)",
+    background: "#fff",
+    transition: "box-shadow 0.28s, transform 0.28s",
+    cursor: "pointer",
+  },
 
-              </div>
-            </div>
-          </div>
+  serviceImg: {
+    width: "100%",
+    height: 220,
+    objectFit: "cover",
+    display: "block",
+    background: "#f0f0f4",
+  },
 
+  serviceBody: {
+    padding: "28px 28px 32px",
+  },
 
-          {/* <div className='items-center shadow-2xl shadow-blue-700 rounded-lg z-10'>
-            <img src={background} alt="" className='h-110 rounded-lg' />
-          </div> */}
-        </div>
-      </motion.section>
+  serviceTag: {
+    fontSize: "0.68rem",
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: "#1246F6",
+    marginBottom: 10,
+    display: "block",
+  },
 
-      {/* services */}
-      <section
-        id="services"
-        className="scroll-mt-54 bg-gradient-to-t from-blue-400 via-95% to-white py-10 px-5 lg:px-20"
-      >
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 justify-center gap-5 max-w-7xl mx-auto">
-          {services.map((service, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.15, duration: 0.5 }}
-              className="bg-white -mt-30 rounded-sm p-6 w-62 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 z-30"
-            >
-              <div className="mb-4 flex justify-center">{service.icon}</div>
-              <h3 className="text-lg font-bold text-black mb-2 text-center">
-                {service.title}
-              </h3>
-              <p className="text-gray-600 text-sm text-center font-extralight">
-                {service.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-        {/* <h2 className="text-4xl font-bold text-center text-black mb-16  py-2 px-2">
-          Our Services
-        </h2> */}
-      </section>
-      {/* overview section */}
+  serviceTitle: {
+    fontSize: "1.1rem",
+    fontWeight: 700,
+    color: "#0d0d12",
+    marginBottom: 10,
+    letterSpacing: "-0.01em",
+  },
 
-      <section id="Overview" className="w-full bg-white scroll-mt-15">
-        {/* Section 1: What is ERP */}
-        <div className="max-w-7xl mx-auto py-20 px-4 lg:px-20">
-          <h1 className="text-4xl font-bold text-gray-600 mb-6 text-center py-4">
-            What is A.I Agent?
-          </h1>
-          <div className='justify-between md:flex grid'>
-            <motion.p
-              initial={{ x: -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 1 }}
-              className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
-              Enterprise Resource Planning (ERP) software is a powerful all-in-one system that helps businesses manage their daily operations — including sales, inventory, accounting, payroll, human resources, and customer relationships — all from a single, connected platform.
-              <br /><br />
-              At <span className="text-blue-950 font-semibold">Learnsoft Beliotech Solutions</span>, our ERP systems bring all your key business functions together in one place. With real-time visibility, streamlined workflows, and enhanced collaboration across departments, our ERP helps your team reduce manual work, make smarter decisions, and operate more efficiently. It’s the foundation for modern, scalable business growth.
-            </motion.p>
-            <img src={background} alt="" className='mx-auto h-60 md:h-80 pl-5' />
+  serviceDesc: {
+    fontSize: "0.87rem",
+    color: "#6b6b7b",
+    lineHeight: 1.7,
+  },
 
-          </div>
-        </div>
+  /* About */
+  aboutSection: {
+    padding: "100px 48px",
+    background: "#f7f7fa",
+  },
 
-        {/* Section 2: Why You Need ERP */}
-        <div id='' className="scroll-mt-24 max-w-7xl mx-auto py-16 px-4 lg:px-20 bg-gray-50 shadow-md">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
-            Why Your Business Needs ERP
-          </h2>
-          <p className="text-gray-700 text-lg leading-relaxed font-medium max-w-5xl">
-            No more juggling between disconnected systems. With ERP, your team works with the same real-time data — reducing errors, saving time, and improving accuracy across the board. From sales and finance to HR and inventory, you gain a clear and unified view of your business performance.
-            <br /><br />
-            ERP empowers your business to automate repetitive tasks, reduce operational costs, and keep every department aligned. Whether you're a fast-growing startup or an established company, ERP gives you the control and flexibility to scale confidently — acting as the command center for smarter, more strategic growth.
-          </p>
-        </div>
-      </section>
+  aboutGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 80,
+    alignItems: "center",
+  },
 
+  aboutImg: {
+    width: "100%",
+    height: 520,
+    objectFit: "cover",
+    borderRadius: 16,
+    display: "block",
+  },
 
+  aboutPoints: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+    marginTop: 40,
+  },
 
-      {/* products */}
-      <section id="products" className="bg-white py-20 px-5 lg:px-20 scroll-mt-20">
-        <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
-          Our Products
-        </h2>
-        <div className="flex flex-col gap-16 max-w-6xl mx-auto">
-          {products.map((product, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -100 : 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 === 1 ? "md:flex-row-reverse" : ""
-                }`}
-            >
-              <img
-                src={product.image}
-                alt={product.title}
-                className="h-64 w-full md:w-1/2 object-cover rounded-xl shadow-md"
-              />
-              <div className="md:w-1/2 text-center md:text-left">
-                <h3 className="text-2xl font-semibold text-blue-900 mb-4">
-                  {product.title}
-                </h3>
-                <p className="text-gray-700 mb-6">{product.description}</p>
-                <a
-                  href="#"
-                  className="inline-block bg-orange-500 text-white py-2 px-5 rounded-lg hover:bg-orange-600 transition"
-                >
-                  Request Demo
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+  aboutPoint: {
+    display: "flex",
+    gap: 20,
+    alignItems: "flex-start",
+  },
 
-      {/* <div>
-        <h2 className="text-4xl font-bold text-center text-blue-950 mb-16">
-        Our Products
-      </h2>
-        <div className="flex columns-auto max-w-7xl mx-auto px-5 py-8">
-        
-              <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-        
-                  <img src="4.jpeg" alt=""
-                  className="h-50 object-cover mx-auto  w-80"/>
-        
-                  <h1 className="ml-5 text-2xl font-semibold text-black pt-5">Project Management</h1>
-                  <p className="text-gray-600 p-2 ml-5 text-sm"> ERP
-                  </p>
-                  <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-              </div>
-              <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-        
-                  <img src="" alt=""
-                  className="h-50 object-cover mx-auto  w-80"/>
-                  <h1 className="ml-5 text-2xl font-semibold text-black pt-5">School ERP</h1>
-                  <p className="text-gray-600 p-2 ml-5 text-sm"> ERP
-                  </p>
-                  <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-              </div>
-              <div className="overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-        
-                  <img src="" alt=""
-                  className="h-50 object-cover mx-auto  w-80"/>
-                  <h1 className="ml-5 text-2xl font-semibold text-black pt-5"> HR</h1>
-                  <p className="text-gray-600 p-2 ml-5 text-sm"> ERP
-                  </p>
-                  <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-              </div>
-              <div className=" overflow-hidden hover:shadow-lg bg-white mx-2 my-8  border-2 border-gray-100 w-80 rounded-xl pb-5 hover:scale-105 hover:border-0" >
-        
-                  <img src ="/1.jpeg" alt=""
-                  className="h-50 object-cover mx-auto  w-80"/>
-                  <h1 className="ml-5 text-2xl font-semibold text-black pt-5">supply chain</h1>
-                  <p className="text-gray-600 p-2 ml-5 text-sm"> ERP
-                  </p>
-                  <a href="" className="text-orange-600 border-2 border-orange-500 rounded-full text-1xl px-2 py-1 font-bold ml-5 hover:bg-orange-600 hover:text-white"> Book Now</a>
-              </div>
-          </div>
-      </div> */}
+  pointNum: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "1.1rem",
+    color: "#1246F6",
+    fontWeight: 400,
+    minWidth: 28,
+    lineHeight: 1.4,
+  },
 
+  pointText: {
+    fontSize: "0.9rem",
+    color: "#3a3a4a",
+    lineHeight: 1.7,
+  },
 
-      {/* About us */}
-      <section id="Aboutus" className="bg-white py-20 px-5 lg:px-20">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-4xl font-bold text-blue-950">Who We Are</h1>
-            <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-              Learnsoft Beliotech Solutions is a forward-thinking tech company
-              revolutionizing how businesses operate through innovative digital
-              solutions.
-            </p>
-          </motion.div>
+  pointTitle: {
+    fontWeight: 700,
+    color: "#0d0d12",
+    display: "block",
+    marginBottom: 4,
+    fontSize: "0.92rem",
+  },
 
-          {/* Mission + Vision */}
-          <div className="grid md:grid-cols-2 gap-10 items-start mb-20">
-            <motion.div
-              initial={{ x: -80, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="bg-orange-50 p-6 rounded-lg shadow"
-            >
-              <h3 className="text-xl font-semibold text-orange-500 mb-2">
-                Our Mission
-              </h3>
-              <p className="text-gray-700 leading-relaxed">
-                To empower organizations of all sizes by delivering cutting-edge,
-                user-friendly digital products that streamline operations and
-                accelerate growth.
-              </p>
-            </motion.div>
+  /* Process — dark section */
+  processSection: {
+    padding: "100px 48px",
+    background: "#0d0d12",
+  },
 
-            <motion.div
-              initial={{ x: 80, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="bg-blue-50 p-6 rounded-lg shadow"
-            >
-              <h3 className="text-xl font-semibold text-blue-700 mb-2">
-                Our Vision
-              </h3>
-              <p className="text-gray-700 leading-relaxed">
-                To become Africa’s leading software innovation hub by building
-                scalable and impactful digital ecosystems that shape the future.
-              </p>
-            </motion.div>
-          </div>
+  processGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: 1,
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.05)",
+    borderRadius: 16,
+    overflow: "hidden",
+    marginTop: 64,
+  },
 
-          {/* Highlights */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-center"
-          >
-            {[
-              { title: "10+", subtitle: "Years of Experience" },
-              { title: "500+", subtitle: "Clients Served" },
-              { title: "20+", subtitle: "Enterprise Solutions" },
-              { title: "100%", subtitle: "Customer Satisfaction" },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="p-6 bg-gray-100 rounded-lg shadow hover:shadow-md transition"
-              >
-                <h4 className="text-3xl font-bold text-blue-950">{item.title}</h4>
-                <p className="text-gray-600 mt-2">{item.subtitle}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+  processStep: {
+    padding: "44px 36px",
+    background: "#0d0d12",
+    transition: "background 0.2s",
+  },
 
-      {/* contaact Us */}
-      <a
-        href={whatsappURL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-10 right-10 z-50 bg-orange-500 text-white rounded-full p-4 shadow-lg hover:bg-orange-600  transition  animate-pulse"
-      >
-        <motion.svg
-          whileTap={{ scale: 0.8 }}
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          className="w-6 h-6 md:w-8 md:h-8"
-        >
-          <path d="M12.04 2.01A10 10 0 0 0 2 12.06a9.84 9.84 0 0 0 1.37 5.09L2 22l5.07-1.33a9.95 9.95 0 0 0 4.96 1.28H12A10 10 0 0 0 12.04 2zM12 20.08a8.07 8.07 0 0 1-4.1-1.13l-.3-.17-3.02.79.8-2.94-.2-.31a8.04 8.04 0 1 1 14.9-4.27 8.03 8.03 0 0 1-8.08 8.03zm4.62-6.03c-.26-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.66.83-.81 1-.3.2-.56.07a6.6 6.6 0 0 1-1.94-1.2 7.4 7.4 0 0 1-1.37-1.7c-.14-.26 0-.4.12-.53.12-.13.26-.3.4-.45.14-.15.2-.26.3-.43a.5.5 0 0 0-.02-.48c-.07-.14-.57-1.37-.78-1.87s-.4-.42-.56-.43h-.48a.92.92 0 0 0-.67.31 2.78 2.78 0 0 0-.86 2.06c0 1.22.87 2.4 1 2.57.13.17 1.7 2.6 4.13 3.64.58.25 1.04.4 1.4.51a3.35 3.35 0 0 0 1.56.1 2.66 2.66 0 0 0 1.75-1.22c.22-.3.22-.54.16-.74s-.24-.17-.5-.3z" />
-        </motion.svg>
-      </a>
-      {/* contact Us */}
-      <section id="contact" className="bg-white py-20 px-5 lg:px-20">
-        {/* Main Section Title */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-blue-950 mb-3">Contact Learnsoft</h1>
-          <p className="text-gray-600 text-lg">
-            Have a question, proposal, or want to work with us? Reach out — we're here to help!
-          </p>
-        </div>
+  processStepNum: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "3rem",
+    color: "rgba(255,255,255,0.06)",
+    lineHeight: 1,
+    marginBottom: 18,
+    fontWeight: 400,
+  },
 
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ x: -60, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-bold text-blue-950 mb-6">Get in Touch</h2>
-            <p className="text-gray-600 mb-6">
-              Let’s talk! Fill out the form or reach us directly — we’re here to support your digital transformation journey.
-            </p>
+  processStepTitle: {
+    fontSize: "0.95rem",
+    fontWeight: 700,
+    color: "#fff",
+    marginBottom: 10,
+    letterSpacing: "-0.01em",
+  },
 
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <FaMapMarkerAlt className="text-orange-500 text-xl mt-1" />
-                <p>123 Smart Avenue, Nairobi, Kenya</p>
-              </div>
-              <div className="flex items-start gap-4">
-                <FaPhoneAlt className="text-orange-500 text-xl mt-1" />
-                <p>+254 700 000 000</p>
-              </div>
-              <div className="flex items-start gap-4">
-                <FaEnvelope className="text-orange-500 text-xl mt-1" />
-                <p>info@learnsoft.co.ke</p>
-              </div>
-            </div>
-          </motion.div>
+  processStepDesc: {
+    fontSize: "0.82rem",
+    color: "rgba(255,255,255,0.38)",
+    lineHeight: 1.7,
+  },
 
-          {/* Contact Form */}
-          <motion.form
-            initial={{ x: 60, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="bg-gray-50 p-8 rounded-lg shadow-lg space-y-6"
-          >
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="Your name"
-                required
-              />
-            </div>
+  /* Office image divider */
+  dividerImg: {
+    width: "100%",
+    height: 420,
+    objectFit: "cover",
+    display: "block",
+    filter: "brightness(0.7)",
+  },
 
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
-                Email Address
-              </label>
-              <input
-                type="email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+  dividerOverlay: {
+    position: "relative",
+    overflow: "hidden",
+  },
 
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
-                Message
-              </label>
-              <textarea
-                rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="Your message"
-                required
-              ></textarea>
-            </div>
+  dividerText: {
+    position: "absolute",
+    bottom: 48,
+    left: 80,
+    right: 80,
+    color: "#fff",
+    zIndex: 2,
+  },
 
-            <button
-              type="submit"
-              className="bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition"
-            >
-              Send Message
-            </button>
-          </motion.form>
-        </div>
+  dividerQuote: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "clamp(1.4rem, 3vw, 2.2rem)",
+    fontWeight: 400,
+    lineHeight: 1.3,
+    letterSpacing: "-0.015em",
+    maxWidth: 640,
+    fontStyle: "italic",
+    color: "rgba(255,255,255,0.9)",
+  },
 
-        {/* Google Map */}
-        <div className="mt-20 rounded-lg overflow-hidden shadow-lg">
-          <iframe
-            title="Learnsoft Location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
-            width="100%"
-            height="300"
-            allowFullScreen={true}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
-      </section>
+  dividerCaption: {
+    fontSize: "0.78rem",
+    color: "rgba(255,255,255,0.45)",
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    marginTop: 16,
+  },
 
+  /* Contact */
+  contactGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1.4fr",
+    gap: 80,
+    alignItems: "start",
+  },
 
-      {/* footer*/}
+  contactInfoTitle: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "1.9rem",
+    fontWeight: 400,
+    color: "#0d0d12",
+    letterSpacing: "-0.02em",
+    marginBottom: 16,
+    lineHeight: 1.2,
+  },
 
-      <footer className='justify-between flex mx-auto  bg-blue-950 w-full'>
-        <hr className='max-w-7xl mx-auto my-5 text-gray-400' />
-        <p className=' text-[8px] md:text-sm text-start font-extralight max-w-6xl  text-gray-400'>&copy; Learnsoft Beliotech Solutions Limited, All Right Reserved. 2025</p>
-        <div>
-          <a href="" className='text-gray-400'>FAQ's</a>
-        </div>
-      </footer>
-    </>
-  )
+  contactInfoBody: {
+    color: "#6b6b7b",
+    fontSize: "0.93rem",
+    lineHeight: 1.78,
+    marginBottom: 40,
+    fontWeight: 300,
+  },
+
+  contactItems: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+  },
+
+  contactItem: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: 16,
+  },
+
+  ciIconBox: {
+    width: 42, height: 42,
+    background: "#f0f0f5",
+    borderRadius: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+
+  ciLabel: {
+    fontSize: "0.68rem",
+    color: "#9b9baa",
+    letterSpacing: "0.07em",
+    textTransform: "uppercase",
+    marginBottom: 3,
+    display: "block",
+  },
+
+  ciValue: {
+    fontSize: "0.88rem",
+    color: "#0d0d12",
+    fontWeight: 500,
+  },
+
+  contactForm: {
+    background: "#f7f7fa",
+    border: "1px solid rgba(13,13,18,0.07)",
+    borderRadius: 18,
+    padding: "48px 44px",
+  },
+
+  formRow: { marginBottom: 20 },
+
+  formLabel: {
+    display: "block",
+    fontSize: "0.72rem",
+    fontWeight: 700,
+    color: "#6b6b7b",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+
+  formInput: {
+    width: "100%",
+    background: "#fff",
+    border: "1.5px solid rgba(13,13,18,0.08)",
+    borderRadius: 10,
+    padding: "13px 16px",
+    fontFamily: "'Satoshi', sans-serif",
+    fontSize: "0.92rem",
+    color: "#0d0d12",
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 0.2s",
+  },
+
+  formTextarea: {
+    width: "100%",
+    background: "#fff",
+    border: "1.5px solid rgba(13,13,18,0.08)",
+    borderRadius: 10,
+    padding: "13px 16px",
+    fontFamily: "'Satoshi', sans-serif",
+    fontSize: "0.92rem",
+    color: "#0d0d12",
+    outline: "none",
+    resize: "vertical",
+    minHeight: 120,
+    boxSizing: "border-box",
+    transition: "border-color 0.2s",
+  },
+
+  formSelect: {
+    width: "100%",
+    background: "#fff",
+    border: "1.5px solid rgba(13,13,18,0.08)",
+    borderRadius: 10,
+    padding: "13px 16px",
+    fontFamily: "'Satoshi', sans-serif",
+    fontSize: "0.92rem",
+    color: "#0d0d12",
+    outline: "none",
+    appearance: "none",
+    boxSizing: "border-box",
+  },
+
+  form2col: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 16,
+  },
+
+  formSubmit: {
+    background: "#0d0d12",
+    color: "#fff",
+    border: "none",
+    padding: "15px 36px",
+    borderRadius: 10,
+    fontFamily: "'Satoshi', sans-serif",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    cursor: "pointer",
+    letterSpacing: "0.02em",
+    width: "100%",
+    marginTop: 8,
+    transition: "background 0.2s, transform 0.15s",
+  },
+
+  /* WhatsApp */
+  waFloat: {
+    position: "fixed",
+    bottom: 28,
+    right: 28,
+    zIndex: 200,
+    width: 52, height: 52,
+    background: "#25D366",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
+    cursor: "pointer",
+    textDecoration: "none",
+    transition: "transform 0.2s",
+  },
+
+  /* Footer */
+  footer: {
+    background: "#0d0d12",
+    padding: "64px 48px 32px",
+  },
+
+  footerTop: {
+    display: "grid",
+    gridTemplateColumns: "1.6fr 1fr 1fr 1fr",
+    gap: 48,
+    marginBottom: 48,
+  },
+
+  footerLogo: {
+    fontFamily: "'Instrument Serif', Georgia, serif",
+    fontSize: "1.3rem",
+    color: "#fff",
+    display: "block",
+    marginBottom: 14,
+    fontWeight: 400,
+    textDecoration: "none",
+  },
+
+  footerBrandText: {
+    fontSize: "0.82rem",
+    color: "rgba(255,255,255,0.3)",
+    lineHeight: 1.75,
+    maxWidth: 240,
+  },
+
+  footerColTitle: {
+    fontSize: "0.68rem",
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: "rgba(255,255,255,0.28)",
+    marginBottom: 18,
+  },
+
+  footerList: {
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+
+  footerLink: {
+    fontSize: "0.83rem",
+    color: "rgba(255,255,255,0.45)",
+    textDecoration: "none",
+    transition: "color 0.18s",
+    cursor: "pointer",
+  },
+
+  footerBottom: {
+    borderTop: "1px solid rgba(255,255,255,0.06)",
+    paddingTop: 24,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+
+  footerCopy: {
+    fontSize: "0.76rem",
+    color: "rgba(255,255,255,0.22)",
+  },
+};
+
+/* ── useScrollReveal hook ── */
+function useScrollReveal() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, visible];
 }
 
-export default App
+/* ── Reveal wrapper ── */
+function Reveal({ children, delay = 0 }) {
+  const [ref, visible] = useScrollReveal();
+  return (
+    <div ref={ref} style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0)" : "translateY(28px)",
+      transition: `opacity 0.65s ease ${delay}s, transform 0.65s ease ${delay}s`,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+/* ── SectionLabel ── */
+function SectionLabel({ children }) {
+  return (
+    <div style={S.label}>
+      <span style={S.labelLine} />
+      {children}
+    </div>
+  );
+}
+
+/* ── Topbar ── */
+function Topbar() {
+  return (
+    <div style={S.topbar}>
+      <span>info@mksolutions.co.ke</span>
+      <span style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
+      <span>+254 706 384 510</span>
+      <span style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
+      <span>Nairobi, Kenya</span>
+    </div>
+  );
+}
+
+/* ── Navbar ── */
+function Navbar() {
+  const [open, setOpen] = useState(false);
+  const links = [
+    { label: "Services", href: "#services" },
+    { label: "About", href: "#about" },
+    { label: "Process", href: "#process" },
+    { label: "Contact", href: "#contact" },
+  ];
+  return (
+    <>
+      <nav style={S.nav}>
+        <a href="#" style={S.logo}>
+          MK<span style={S.logoAccent}>Solutions</span>
+        </a>
+        <ul style={{ ...S.navLinks, display: window.innerWidth < 900 ? "none" : "flex" }}>
+          {links.map(l => (
+            <li key={l.label}>
+              <a href={l.href} style={S.navLink}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+        <a href="#contact"
+          style={{ ...S.navCta, display: window.innerWidth < 900 ? "none" : "inline-block" }}
+          onMouseOver={e => { e.target.style.background = "#1246F6"; e.target.style.transform = "translateY(-1px)"; }}
+          onMouseOut={e => { e.target.style.background = "#0d0d12"; e.target.style.transform = ""; }}
+        >
+          Book Consultation
+        </a>
+
+        {/* Hamburger */}
+        <button
+          onClick={() => setOpen(!open)}
+          style={{ display: window.innerWidth >= 900 ? "none" : "block", background: "none", border: "none", cursor: "pointer", padding: 4 }}
+          aria-label="Menu"
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            {open
+              ? <path d="M4 4L18 18M18 4L4 18" stroke="#0d0d12" strokeWidth="1.8" strokeLinecap="round" />
+              : <><path d="M3 6h16M3 11h16M3 16h16" stroke="#0d0d12" strokeWidth="1.8" strokeLinecap="round" /></>
+            }
+          </svg>
+        </button>
+      </nav>
+
+      {/* Mobile drawer */}
+      {open && (
+        <div style={{
+          position: "fixed", top: 68, left: 0, right: 0, zIndex: 99,
+          background: "#fff", borderBottom: "1px solid rgba(13,13,18,0.08)",
+          padding: "28px 32px 36px", display: "flex", flexDirection: "column", gap: 16,
+          boxShadow: "0 24px 48px rgba(0,0,0,0.08)",
+        }}>
+          {links.map(l => (
+            <a key={l.label} href={l.href}
+              onClick={() => setOpen(false)}
+              style={{ fontSize: "1.05rem", color: "#0d0d12", textDecoration: "none", fontWeight: 500, padding: "10px 0", borderBottom: "1px solid rgba(13,13,18,0.06)" }}
+            >{l.label}</a>
+          ))}
+          <a href="#contact" onClick={() => setOpen(false)}
+            style={{ ...S.navCta, textAlign: "center", marginTop: 8, display: "block" }}
+          >Book Consultation</a>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ── Hero ── */
+function Hero() {
+  return (
+    <section style={S.hero}>
+      <div style={{ ...S.heroBg, backgroundImage: `url(${IMAGES.hero})` }} />
+      <div style={S.heroOverlay} />
+      <div style={S.heroContent}>
+        <div style={S.heroEyebrow}>
+          <span style={S.heroDot} />
+          AI-First Digital Transformation
+        </div>
+        <h1 style={S.heroH1}>
+          Build Smarter.<br />
+          Automate Faster.<br />
+          <em style={S.heroH1Em}>Grow Further.</em>
+        </h1>
+        <p style={S.heroSub}>
+          MK Solutions helps African businesses harness the power of AI, automation, and data — delivering real results from day one.
+        </p>
+        <div style={S.heroActions}>
+          <a href="#contact" style={S.btnPrimary}
+            onMouseOver={e => { e.currentTarget.style.background = "#0037d0"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseOut={e => { e.currentTarget.style.background = "#1246F6"; e.currentTarget.style.transform = ""; }}
+          >
+            Book a Free Consultation
+          </a>
+          <a href="#services" style={S.btnGhost}
+            onMouseOver={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseOut={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)"; e.currentTarget.style.color = "rgba(255,255,255,0.75)"; }}
+          >
+            Explore Services
+          </a>
+        </div>
+        <div style={S.heroStats}>
+          {[["500+", "Clients Served"], null, ["10+", "Years Experience"], null, ["20+", "Enterprise Solutions"], null, ["100%", "Client Satisfaction"]].map((s, i) =>
+            s === null
+              ? <div key={i} style={S.statLine} />
+              : (
+                <div key={i} style={S.heroStat}>
+                  <span style={S.heroStatNum}>{s[0]}</span>
+                  <span style={S.heroStatLabel}>{s[1]}</span>
+                </div>
+              )
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Services ── */
+const SERVICES = [
+  {
+    tag: "Artificial Intelligence",
+    title: "AI & Automation",
+    desc: "Deploy intelligent agents, automate repetitive workflows, and embed AI into your existing operations — saving hours every week.",
+    img: IMAGES.ai,
+  },
+  {
+    tag: "Training & Education",
+    title: "AI Training",
+    desc: "Hands-on workshops for teams and individuals — from AI fundamentals to advanced prompt engineering and enterprise tool adoption.",
+    img: IMAGES.training,
+  },
+  {
+    tag: "Digital Presence",
+    title: "Website Creation",
+    desc: "Fast, modern, conversion-focused websites and web applications — built for performance, SEO, and lasting brand credibility.",
+    img: IMAGES.web,
+  },
+  {
+    tag: "Intelligence",
+    title: "Data Analytics",
+    desc: "Transform raw data into clear business decisions — custom dashboards, forecasting models, and actionable reporting pipelines.",
+    img: IMAGES.analytics,
+  },
+];
+
+function Services() {
+  return (
+    <section id="services" style={{ ...S.section, background: "#f7f7fa" }}>
+      <div style={S.container}>
+        <Reveal>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 56 }}>
+            <div>
+              <SectionLabel>Our Services</SectionLabel>
+              <h2 style={S.sectionTitle}>Everything your business<br />needs to scale</h2>
+            </div>
+            <p style={{ ...S.sectionBody, maxWidth: 380, marginTop: 0 }}>
+              From strategy to execution — full-stack digital solutions tailored to your goals and your market.
+            </p>
+          </div>
+        </Reveal>
+
+        <div style={S.servicesGrid}>
+          {SERVICES.map((svc, i) => (
+            <Reveal key={svc.title} delay={i * 0.08}>
+              <div
+                style={S.serviceCard}
+                onMouseOver={e => {
+                  e.currentTarget.style.boxShadow = "0 20px 56px rgba(13,13,18,0.1)";
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                }}
+                onMouseOut={e => {
+                  e.currentTarget.style.boxShadow = "";
+                  e.currentTarget.style.transform = "";
+                }}
+              >
+                <img src={svc.img} alt={svc.title} style={S.serviceImg} loading="lazy" />
+                <div style={S.serviceBody}>
+                  <span style={S.serviceTag}>{svc.tag}</span>
+                  <div style={S.serviceTitle}>{svc.title}</div>
+                  <p style={S.serviceDesc}>{svc.desc}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── About ── */
+function About() {
+  const points = [
+    { n: "01", title: "We start with your business goals", desc: "Not the technology. Every engagement begins with understanding your operations and where the leverage points are." },
+    { n: "02", title: "We deliver, then we train", desc: "Every solution is handed off with full team training — so adoption is guaranteed, not an afterthought." },
+    { n: "03", title: "We stay as your long-term partner", desc: "No disappearing post-launch. We monitor, optimise, and scale alongside your growth." },
+  ];
+
+  return (
+    <section id="about" style={S.aboutSection}>
+      <div style={S.container}>
+        <div style={S.aboutGrid}>
+          <Reveal>
+            <img src={IMAGES.team} alt="MK Solutions team" style={S.aboutImg} loading="lazy" />
+          </Reveal>
+          <Reveal delay={0.1}>
+            <SectionLabel>Who We Are</SectionLabel>
+            <h2 style={S.sectionTitle}>Africa's trusted AI & digital transformation partner</h2>
+            <p style={S.sectionBody}>
+              MK Solutions is a Nairobi-based technology firm helping organisations across Africa adopt AI, streamline operations, and build digital infrastructure that lasts.
+            </p>
+            <div style={S.aboutPoints}>
+              {points.map(p => (
+                <div key={p.n} style={S.aboutPoint}>
+                  <span style={S.pointNum}>{p.n}</span>
+                  <div>
+                    <span style={S.pointTitle}>{p.title}</span>
+                    <span style={S.pointText}>{p.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 44 }}>
+              <a href="#contact" style={{ ...S.btnPrimary, textDecoration: "none" }}
+                onMouseOver={e => { e.currentTarget.style.background = "#0037d0"; }}
+                onMouseOut={e => { e.currentTarget.style.background = "#1246F6"; }}
+              >
+                Work With Us
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Process ── */
+const STEPS = [
+  { n: "01", title: "Discovery Call", desc: "We learn your business, pain points, and goals. Free consultation — no strings attached." },
+  { n: "02", title: "Strategy & Scoping", desc: "Clear roadmap, deliverables, and timeline — transparent pricing, no surprises." },
+  { n: "03", title: "Build & Iterate", desc: "Agile delivery with weekly check-ins. You see progress continuously, not just at the end." },
+  { n: "04", title: "Launch & Train", desc: "We deploy, train your team, and ensure adoption — so results follow the rollout." },
+  { n: "05", title: "Ongoing Support", desc: "Monitoring, optimisation, and scaling. We're your long-term partner, not a one-off vendor." },
+];
+
+function Process() {
+  return (
+    <section id="process" style={S.processSection}>
+      <div style={S.container}>
+        <Reveal>
+          <div style={{ ...S.label, color: "rgba(255,255,255,0.35)" }}>
+            <span style={{ ...S.labelLine, background: "rgba(255,255,255,0.2)" }} />
+            How We Work
+          </div>
+          <h2 style={{ ...S.sectionTitle, color: "#fff" }}>
+            From first call to full<br />deployment — fast
+          </h2>
+        </Reveal>
+
+        <div style={S.processGrid}>
+          {STEPS.map((s, i) => (
+            <div key={s.n} style={S.processStep}
+              onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
+              onMouseOut={e => e.currentTarget.style.background = "#0d0d12"}
+            >
+              <div style={S.processStepNum}>{s.n}</div>
+              <div style={S.processStepTitle}>{s.title}</div>
+              <p style={S.processStepDesc}>{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Divider Quote ── */
+function FullWidthDivider() {
+  return (
+    <div style={S.dividerOverlay}>
+      <img src={IMAGES.office} alt="MK Solutions office" style={S.dividerImg} loading="lazy" />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(13,13,18,0.55)" }} />
+      <div style={S.dividerText}>
+        <p style={S.dividerQuote}>
+          "We don't just implement technology — we transform the way your organisation thinks and operates."
+        </p>
+        <p style={S.dividerCaption}>MK Solutions — Nairobi, Kenya</p>
+      </div>
+    </div>
+  );
+}
+
+/* ── Contact ── */
+function Contact() {
+  const [sent, setSent] = useState(false);
+
+  const contactItems = [
+    { icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+      ), label: "Location", value: "Nairobi, Kenya" },
+    { icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+        </svg>
+      ), label: "Phone / WhatsApp", value: "+254 706 384 510" },
+    { icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+        </svg>
+      ), label: "Email", value: "info@mksolutions.co.ke" },
+    { icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1246F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      ), label: "Business Hours", value: "Mon – Fri, 8AM – 6PM EAT" },
+  ];
+
+  return (
+    <section id="contact" style={{ ...S.section, background: "#fff" }}>
+      <div style={S.container}>
+        <Reveal>
+          <SectionLabel>Get In Touch</SectionLabel>
+          <h2 style={{ ...S.sectionTitle, marginBottom: 56 }}>Ready to transform<br />your business?</h2>
+        </Reveal>
+
+        <div style={S.contactGrid}>
+          <Reveal>
+            <p style={S.contactInfoBody}>
+              Whether you want to explore AI for your team, automate your workflows, build a new website, or unlock your data — we are ready to help. Let's start with a conversation.
+            </p>
+            <div style={S.contactItems}>
+              {contactItems.map(ci => (
+                <div key={ci.label} style={S.contactItem}>
+                  <div style={S.ciIconBox}>{ci.icon}</div>
+                  <div>
+                    <span style={S.ciLabel}>{ci.label}</span>
+                    <div style={S.ciValue}>{ci.value}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div style={S.contactForm}>
+              <div style={S.form2col}>
+                <div style={S.formRow}>
+                  <label style={S.formLabel}>First Name</label>
+                  <input style={S.formInput} type="text" placeholder="John"
+                    onFocus={e => e.target.style.borderColor = "#1246F6"}
+                    onBlur={e => e.target.style.borderColor = "rgba(13,13,18,0.08)"}
+                  />
+                </div>
+                <div style={S.formRow}>
+                  <label style={S.formLabel}>Last Name</label>
+                  <input style={S.formInput} type="text" placeholder="Doe"
+                    onFocus={e => e.target.style.borderColor = "#1246F6"}
+                    onBlur={e => e.target.style.borderColor = "rgba(13,13,18,0.08)"}
+                  />
+                </div>
+              </div>
+              <div style={S.formRow}>
+                <label style={S.formLabel}>Email Address</label>
+                <input style={S.formInput} type="email" placeholder="john@company.com"
+                  onFocus={e => e.target.style.borderColor = "#1246F6"}
+                  onBlur={e => e.target.style.borderColor = "rgba(13,13,18,0.08)"}
+                />
+              </div>
+              <div style={S.formRow}>
+                <label style={S.formLabel}>Service Interest</label>
+                <select style={S.formSelect}>
+                  <option value="">Select a service...</option>
+                  <option>AI &amp; Automation</option>
+                  <option>AI Training</option>
+                  <option>Website Creation</option>
+                  <option>Data Analytics</option>
+                  <option>Multiple Services</option>
+                </select>
+              </div>
+              <div style={S.formRow}>
+                <label style={S.formLabel}>Message</label>
+                <textarea style={S.formTextarea} placeholder="Tell us about your project or challenge..."
+                  onFocus={e => e.target.style.borderColor = "#1246F6"}
+                  onBlur={e => e.target.style.borderColor = "rgba(13,13,18,0.08)"}
+                />
+              </div>
+              <button
+                style={{ ...S.formSubmit, background: sent ? "#16a34a" : "#0d0d12" }}
+                onMouseOver={e => { if (!sent) e.currentTarget.style.background = "#1246F6"; }}
+                onMouseOut={e => { if (!sent) e.currentTarget.style.background = "#0d0d12"; }}
+                onClick={() => { setSent(true); setTimeout(() => setSent(false), 3000); }}
+              >
+                {sent ? "Message Sent" : "Send Message"}
+              </button>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
+      {/* Map */}
+      <div style={{ maxWidth: 1160, margin: "64px auto 0", padding: "0 0" }}>
+        <iframe
+          title="MK Solutions Location"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.853898546794!2d36.801161674879594!3d-1.259804998728201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f176ab788de03%3A0x6ce6930ee66eeb8c!2sThe%20Westwood!5e0!3m2!1sen!2ske!4v1752008415264!5m2!1sen!2ske"
+          width="100%" height="280"
+          style={{ border: "1px solid rgba(13,13,18,0.08)", borderRadius: 16, display: "block" }}
+          allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ── Footer ── */
+function Footer() {
+  return (
+    <footer style={S.footer}>
+      <div style={S.container}>
+        <div style={S.footerTop}>
+          <div>
+            <span style={S.footerLogo}>MK<span style={{ color: "#1246F6" }}>Solutions</span></span>
+            <p style={S.footerBrandText}>
+              Helping African businesses grow through AI, automation, and intelligent digital solutions.
+            </p>
+          </div>
+          {[
+            { title: "Services", links: ["AI & Automation", "AI Training", "Website Creation", "Data Analytics"] },
+            { title: "Company", links: ["About Us", "How We Work", "Contact"] },
+            { title: "Connect", links: ["info@mksolutions.co.ke", "+254 706 384 510", "WhatsApp Us"] },
+          ].map(col => (
+            <div key={col.title}>
+              <div style={S.footerColTitle}>{col.title}</div>
+              <ul style={S.footerList}>
+                {col.links.map(l => (
+                  <li key={l}>
+                    <a href="#" style={S.footerLink}
+                      onMouseOver={e => e.target.style.color = "rgba(255,255,255,0.85)"}
+                      onMouseOut={e => e.target.style.color = "rgba(255,255,255,0.45)"}
+                    >{l}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={S.footerBottom}>
+          <p style={S.footerCopy}>© 2025 MK Solutions Limited. All rights reserved.</p>
+          <div style={{ display: "flex", gap: 20 }}>
+            <a href="#" style={S.footerLink}>Privacy Policy</a>
+            <a href="#" style={S.footerLink}>Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── WhatsApp Float ── */
+function WhatsAppFloat() {
+  return (
+    <a
+      href="https://wa.me/254706384510?text=Hello%21%20I%27m%20interested%20in%20your%20services."
+      target="_blank" rel="noopener noreferrer"
+      style={S.waFloat}
+      onMouseOver={e => e.currentTarget.style.transform = "scale(1.1)"}
+      onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+      aria-label="Chat on WhatsApp"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
+        <path d="M12.04 2.01A10 10 0 0 0 2 12.06a9.84 9.84 0 0 0 1.37 5.09L2 22l5.07-1.33a9.95 9.95 0 0 0 4.96 1.28H12A10 10 0 0 0 12.04 2zM12 20.08a8.07 8.07 0 0 1-4.1-1.13l-.3-.17-3.02.79.8-2.94-.2-.31a8.04 8.04 0 1 1 14.9-4.27 8.03 8.03 0 0 1-8.08 8.03zm4.62-6.03c-.26-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.66.83-.81 1-.3.2-.56.07a6.6 6.6 0 0 1-1.94-1.2 7.4 7.4 0 0 1-1.37-1.7c-.14-.26 0-.4.12-.53s.26-.3.4-.45c.14-.15.2-.26.3-.43a.5.5 0 0 0-.02-.48c-.07-.14-.57-1.37-.78-1.87s-.4-.42-.56-.43h-.48a.92.92 0 0 0-.67.31 2.78 2.78 0 0 0-.86 2.06c0 1.22.87 2.4 1 2.57.13.17 1.7 2.6 4.13 3.64.58.25 1.04.4 1.4.51a3.35 3.35 0 0 0 1.56.1 2.66 2.66 0 0 0 1.75-1.22c.22-.3.22-.54.16-.74s-.24-.17-.5-.3z"/>
+      </svg>
+    </a>
+  );
+}
+
+/* ── App Root ── */
+export default function App() {
+  return (
+    <div style={S.root}>
+      <Topbar />
+      <Navbar />
+      <Hero />
+      <Services />
+      <About />
+      <Process />
+      <FullWidthDivider />
+      <Contact />
+      <Footer />
+      <WhatsAppFloat />
+    </div>
+  );
+}
