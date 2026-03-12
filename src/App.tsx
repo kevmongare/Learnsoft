@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
    IMAGES
 ───────────────────────────────────────── */
 const IMG = {
-  logo:      "/PrimeEdge_AI_Logo-removebg-preview.png",   // ← place your logo in /public/logo.png
+  logo:      "/logo.png",   // ← place your logo in /public/logo.png
   hero:      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1800&q=85&auto=format&fit=crop",
   ai:        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80&auto=format&fit=crop",
   training:  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80&auto=format&fit=crop",
@@ -107,27 +107,23 @@ function Kicker({ children }: { children: ReactNode }) {
 }
 
 /* ─────────────────────────────────────────
-   NAVBAR  (includes topbar internally)
+   HEADER  — sticky topbar + navbar, mobile-first
 ───────────────────────────────────────── */
 function Navbar() {
   const [open, setOpen]         = useState(false);
-  const [wide, setWide]         = useState(window.innerWidth >= 900);
   const [scrolled, setScrolled] = useState(false);
-  const topbarRef               = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onResize = () => setWide(window.innerWidth >= 900);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const h = topbarRef.current?.offsetHeight ?? 36;
-      setScrolled(window.scrollY > h);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close drawer on resize to desktop
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth >= 768) setOpen(false); };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const links = [
@@ -138,106 +134,105 @@ function Navbar() {
   ];
 
   return (
-    <>
-      {/* ── Topbar — scrolls away naturally ── */}
-      <div ref={topbarRef} className="bg-[#05050d] border-b border-white/[.06] px-12 py-2 flex flex-wrap justify-between items-center gap-2 text-[.72rem] tracking-[.06em] text-white/30 font-sans-pe">
-        <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">Prime Edge AI</span>
-        <span>info@primeedgeai.com &nbsp;·&nbsp; +447873625238 &nbsp;·&nbsp; Available 24/7</span>
+    <header className="sticky top-0 z-[200]">
+
+      {/* ── Topbar ── */}
+      <div className="bg-[#05050d] border-b border-white/[.06] font-sans-pe">
+        {/* Mobile: stacked, centred */}
+        <div className="flex flex-col items-center gap-0.5 py-2 px-4 text-center md:hidden">
+          <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-[.8rem]">
+            Prime Edge AI
+          </span>
+          <span className="text-white/30 text-[.64rem] tracking-[.04em]">
+            info@primeedgeai.com · +447873625238 · 24/7
+          </span>
+        </div>
+        {/* Desktop: single row */}
+        <div className="hidden md:flex justify-between items-center px-10 py-2 text-[.72rem] tracking-[.06em] text-white/30">
+          <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">Prime Edge AI</span>
+          <span>info@primeedgeai.com &nbsp;·&nbsp; +447873625238 &nbsp;·&nbsp; Available 24/7</span>
+        </div>
       </div>
 
-      {/* ── Navbar — sticky: sits right below topbar, then sticks to top ── */}
+      {/* ── Navbar ── */}
       <nav
-        className="sticky top-0 left-0 right-0 z-[200] h-[72px] px-12 flex items-center justify-between transition-all duration-300"
+        className="h-[64px] md:h-[72px] px-4 md:px-10 flex items-center justify-between transition-all duration-300"
         style={scrolled
-          ? { background: "rgba(8,8,16,.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,.07)", boxShadow: "0 4px 40px rgba(0,0,0,.5)" }
-          : { background: "rgba(8,8,16,.5)",  backdropFilter: "blur(12px)",  WebkitBackdropFilter: "blur(12px)" }
+          ? { background: "rgba(8,8,16,.97)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,.07)", boxShadow: "0 4px 40px rgba(0,0,0,.6)" }
+          : { background: "rgba(8,8,16,.75)", backdropFilter: "blur(16px)",  WebkitBackdropFilter: "blur(16px)" }
         }
       >
-        {/* ── Logo ── */}
-        <a href="#" className="flex items-center h-full py-3">
+        {/* Logo */}
+        <a href="#" className="flex items-center gap-2 shrink-0">
           <img
             src={IMG.logo}
             alt="Prime Edge AI"
-            className="h-10 w-auto object-contain"
+            className="h-8 md:h-10 w-auto object-contain"
             onError={(e) => {
-              /* fallback text logo if image missing */
               const img = e.currentTarget as HTMLImageElement;
               img.style.display = "none";
-              const fallback = img.nextElementSibling as HTMLElement | null;
-              if (fallback) fallback.style.display = "block";
+              const fb = img.nextElementSibling as HTMLElement | null;
+              if (fb) fb.style.display = "block";
             }}
           />
-          {/* Text fallback (hidden when image loads) */}
-          <span
-            className="font-serif text-[1.3rem] font-light text-[#F0F0F8] tracking-[.04em]"
-            style={{ display: "none" }}
-          >
+          <span className="font-serif text-[1.15rem] md:text-[1.3rem] font-light text-[#F0F0F8] tracking-[.04em]"
+                style={{ display: "none" }}>
             Prime <em className="italic text-[#6B8CFF]">Edge</em> AI
           </span>
         </a>
 
-        {/* ── Desktop links ── */}
-        {wide && (
-          <ul className="flex gap-9 list-none m-0 p-0 items-center">
-            {links.map(l => (
-              <li key={l.label}>
-                <a
-                  href={l.href}
-                  className="nav-link-hover text-white/55 text-[.78rem] font-sans-pe font-normal tracking-[.1em] uppercase no-underline transition-colors duration-200"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* Desktop links — hidden on mobile */}
+        <ul className="hidden md:flex gap-9 list-none m-0 p-0 items-center">
+          {links.map(l => (
+            <li key={l.label}>
+              <a href={l.href}
+                 className="nav-link-hover text-white/55 text-[.78rem] font-sans-pe font-normal tracking-[.1em] uppercase no-underline transition-colors duration-200">
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
 
-        {/* ── Desktop CTA ── */}
-        {wide && (
-          <a
-            href="#contact"
-            className="nav-cta text-[#6B8CFF] border border-[#6B8CFF] px-6 py-[9px] text-[.74rem] font-medium font-sans-pe tracking-[.1em] uppercase no-underline transition-all duration-200"
-            style={{ borderRadius: "4px" }}
-          >
-            Get Started
-          </a>
-        )}
+        {/* Desktop CTA — hidden on mobile */}
+        <a href="#contact"
+           className="nav-cta hidden md:inline-block text-[#6B8CFF] border border-[#6B8CFF] px-6 py-[9px] text-[.74rem] font-medium font-sans-pe tracking-[.1em] uppercase no-underline transition-all duration-200"
+           style={{ borderRadius: "4px" }}>
+          Get Started
+        </a>
 
-        {/* ── Hamburger ── */}
-        {!wide && (
-          <button
-            onClick={() => setOpen(!open)}
-            className="bg-transparent border-none cursor-pointer p-1"
-            aria-label="Toggle menu"
-          >
-            <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
-              {open
-                ? <path d="M2 2L20 16M20 2L2 16" stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
-                : <>
-                    <line x1="2" y1="2"  x2="20" y2="2"  stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="2" y1="9"  x2="20" y2="9"  stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="2" y1="16" x2="20" y2="16" stroke="#F0F0F8" strokeWidth="1.5" strokeLinecap="round" />
-                  </>
-              }
-            </svg>
-          </button>
-        )}
+        {/* Hamburger — visible on mobile only */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          className="md:hidden bg-transparent border-none cursor-pointer p-2 -mr-1 text-white/70 hover:text-white transition-colors"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+        >
+          <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+            {open
+              ? <path d="M2 2L20 16M20 2L2 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              : <>
+                  <line x1="2" y1="2"  x2="20" y2="2"  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="2" y1="9"  x2="20" y2="9"  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="2" y1="16" x2="20" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </>
+            }
+          </svg>
+        </button>
       </nav>
 
-      {/* ── Mobile drawer ── */}
-      {open && !wide && (
-        <div
-          className="fixed top-[72px] left-0 right-0 z-[199] bg-[#0e0e1a] border-b border-white/[.07]
-                     px-8 py-7 flex flex-col gap-1"
-          style={{ boxShadow: "0 24px 60px rgba(0,0,0,.6)" }}
-        >
+      {/* ── Mobile drawer — slides open below the sticky header ── */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${open ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"}`}
+        style={{ background: "rgba(8,8,16,.98)", backdropFilter: "blur(24px)", borderBottom: open ? "1px solid rgba(255,255,255,.07)" : "none" }}
+      >
+        <div className="px-5 pt-2 pb-6 flex flex-col">
           {links.map(l => (
             <a
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="text-white/60 text-[.84rem] font-sans-pe font-normal tracking-[.1em] uppercase
-                         no-underline py-[13px] border-b border-white/[.07]"
+              className="text-white/65 text-[.9rem] font-sans-pe font-normal tracking-[.08em] uppercase
+                         no-underline py-4 border-b border-white/[.06] hover:text-white transition-colors duration-200"
             >
               {l.label}
             </a>
@@ -245,14 +240,16 @@ function Navbar() {
           <a
             href="#contact"
             onClick={() => setOpen(false)}
-            className="nav-cta text-center mt-4 py-3 text-[.78rem] tracking-[.1em] uppercase font-medium font-sans-pe no-underline text-[#6B8CFF] border border-[#6B8CFF]"
+            className="mt-5 text-center py-3.5 text-[.78rem] tracking-[.1em] uppercase font-medium font-sans-pe
+                       no-underline text-white bg-[#6B8CFF] hover:bg-[#4a6ef0] transition-colors duration-200"
             style={{ borderRadius: "4px" }}
           >
             Get Started
           </a>
         </div>
-      )}
-    </>
+      </div>
+
+    </header>
   );
 }
 
@@ -923,7 +920,7 @@ function WhatsAppFloat() {
 export default function App() {
   return (
     <div
-      className="font-sans-pe text-[#F0F0F8] antialiased overflow-x-hidden"
+      className="font-sans-pe text-[#F0F0F8] antialiased"
       style={{ backgroundColor: "#080810", color: "#F0F0F8", minHeight: "100vh" }}
     >
       <Navbar />
