@@ -20,5 +20,5 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build # or 'dist' if you use Vite
+          folder: dist # or 'dist' if you use Vite
           branch: gh-pages
