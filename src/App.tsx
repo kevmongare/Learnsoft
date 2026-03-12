@@ -883,7 +883,7 @@ function Footer() {
         {/* Bottom row */}
         <div className="flex flex-wrap justify-between items-center gap-3">
           <p className="font-sans-pe font-light text-white/22 text-[.71rem] tracking-[.04em]">
-            © 2025 Prime Edge AI Limited. All rights reserved.
+            © {new Date().getFullYear()} Prime Edge AI Limited. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a href="#" className="footer-link font-sans-pe font-light text-white/28 text-[.71rem] no-underline transition-colors duration-200">Privacy Policy</a>
