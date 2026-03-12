@@ -1,24 +1,24 @@
 # learnsoftbeliotechsolutions Static Website
 
-## 📁 Project Structure
+##  Project Structure
 - `index.html` – Main landing page
 - `assets/` – Images, fonts, etc.
 - `css/` – Stylesheets
 - `js/` – Scripts
-## 🛠️ Tech Stack
+##  Tech Stack
 - HTML5
 - React 
 - TypeScript 
 - Vite +tailind
 
-## 🚀 How to Run
+##  How to Run
 Open `index.html` in a browser or use Live Server.
-## 📌 Features
+##  Features
 - Responsive design
 
-## 📅 Timeline
+## Timeline
 - Project start: July 1, 2025
 
-## 👨‍💻 Developer Notes
+## Developer Notes
 - This is a static site, no backend integration.
 - All links are relative for easy hosting.
