@@ -167,7 +167,7 @@ function Navbar() {
           <img
             src={IMG.logo}
             alt="Prime Edge AI"
-            className="h-15 md:h-10 w-auto object-contain"
+            className="h-20 md:h-10 w-auto object-contain"
             onError={(e) => {
               const img = e.currentTarget as HTMLImageElement;
               img.style.display = "none";
