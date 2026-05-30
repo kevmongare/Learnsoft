@@ -144,13 +144,13 @@ function Navbar() {
             Prime Edge AI
           </span>
           <span className="text-white/30 text-[.64rem] tracking-[.04em]">
-            info@primeedgeai.com · +447873625238 · 24/7
+            info@primeedgeai.net · +447873625238 · 24/7
           </span>
         </div>
         {/* Desktop: single row */}
         <div className="hidden md:flex justify-between items-center px-10 py-2 text-[.72rem] tracking-[.06em] text-white/30">
           <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">Prime Edge AI</span>
-          <span>info@primeedgeai.com &nbsp;·&nbsp; +447873625238 &nbsp;·&nbsp; Available 24/7</span>
+          <span>info@primeedgeai.net &nbsp;·&nbsp; +447873625238 &nbsp;·&nbsp; Available 24/7</span>
         </div>
       </div>
 
