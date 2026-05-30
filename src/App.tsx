@@ -140,7 +140,7 @@ function Navbar() {
       <div className="bg-[#05050d] border-b border-white/[.06] font-sans-pe">
         {/* Mobile: stacked, centred */}
         <div className="flex flex-col items-center gap-0.5 py-2 px-4 text-center md:hidden">
-          <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-[.8rem]">
+          <span className="text-gray-800 font-medium tracking-[.1em] font-serif text-[.8rem]">
             Prime Edge AI
           </span>
           <span className="text-white/30 text-[.64rem] tracking-[.04em]">
@@ -149,7 +149,7 @@ function Navbar() {
         </div>
         {/* Desktop: single row */}
         <div className="hidden md:flex justify-between items-center px-10 py-2 text-[.72rem] tracking-[.06em] text-white/30">
-          <span className="text-[#C9A84C] font-medium tracking-[.1em] font-serif text-sm">Prime Edge AI</span>
+          <span className="text-gray-800 font-medium tracking-[.1em] font-serif text-sm">Prime Edge AI</span>
           <span>info@primeedgeai.net &nbsp;·&nbsp; +447873625238 &nbsp;·&nbsp; Available 24/7</span>
         </div>
       </div>
